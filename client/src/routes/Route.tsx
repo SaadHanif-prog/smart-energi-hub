@@ -9,6 +9,12 @@ import Contact from "../pages/contact";
 import Properties from "../pages/properties";
 import Projects from "../pages/projects";
 import Leads from "../pages/leads";
+import Jobs from "../pages/jobs";
+import SubContractor from "../pages/sub-contractor";
+import Appointments from "../pages/appointments";
+import MaterialProfile from "../pages/material-profiles";
+import DataMatch from "../pages/datamatch";
+import SignatureRequests from "../pages/signature-requests";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -35,6 +41,30 @@ const Router = () => {
         {
           path: "/leads",
           element: <Leads />,
+        },
+        {
+          path: "/jobs",
+          element: <Jobs />,
+        },
+        {
+          path: "/sub-contractor",
+          element: <SubContractor />,
+        },
+        {
+          path: "/appointments",
+          element: <Appointments />,
+        },
+        {
+          path: "/material-profile",
+          element: <MaterialProfile />,
+        },
+        {
+          path: "/data-match",
+          element: <DataMatch />,
+        },
+        {
+          path: "/signature-requests",
+          element: <SignatureRequests />,
         },
       ],
     },

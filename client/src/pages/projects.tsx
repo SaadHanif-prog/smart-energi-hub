@@ -55,13 +55,13 @@ const Projects = () => {
   return (
     <>
       <TopBar
-        title="Properties"
-        definition="Create and manage your properties here"
+        title="Projects"
+        definition="Create and manage your projects here"
       />
       <main className="flex min-h-screen flex-col items-center justify-between p-6">
         <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
           {/* Header Controls */}
-          <HeaderControls createBtnText="Create Property" />
+          <HeaderControls createBtnText="Create Project" />
 
           {/* Table */}
           <Table

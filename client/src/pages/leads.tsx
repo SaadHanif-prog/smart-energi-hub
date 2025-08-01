@@ -54,14 +54,11 @@ const Leads = () => {
 
   return (
     <>
-      <TopBar
-        title="Properties"
-        definition="Create and manage your properties here"
-      />
+      <TopBar title="Leads" definition="Create and manage your leads here" />
       <main className="flex min-h-screen flex-col items-center justify-between p-6">
         <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
           {/* Header Controls */}
-          <HeaderControls createBtnText="Create Property" />
+          <HeaderControls createBtnText="Create Lead" />
 
           {/* Table */}
           <Table
