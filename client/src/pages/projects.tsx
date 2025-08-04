@@ -11,7 +11,7 @@ const Projects = () => {
       status: "In Progress",
       startDate: "2025-07-01",
       endDate: "2025-08-15",
-      client: "Eco Approach Ltd",
+      client: "SEH Approach Ltd",
       tags: "+",
     },
     {
