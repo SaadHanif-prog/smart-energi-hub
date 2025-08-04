@@ -30,7 +30,7 @@ const MaterialProfile = () => {
       name: "Plywood Sheet 18mm",
       category: "Wood",
       unit: "Sheet",
-      supplier: "Eco Frame Services",
+      supplier: "SEH Frame Services",
       cost: 18.5,
       availability: "In Stock",
       addedAt: "2025-07-20",

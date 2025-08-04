@@ -27,7 +27,7 @@ const SubContractor = () => {
     },
     {
       contractorId: "SUB-20003",
-      name: "Eco Frame Services",
+      name: "SEH Frame Services",
       contactPerson: "Ali Rehman",
       phone: "07444 998877",
       trade: "Framing",
