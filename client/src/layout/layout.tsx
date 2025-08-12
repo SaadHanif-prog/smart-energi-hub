@@ -21,7 +21,7 @@ const Layout = () => {
         <Sidebar />
         {/* Scrollable Outlet Area */}
         <div
-          className="flex-1 max-w-[1280px] mx-auto overflow-y-auto"
+          className="flex-1 max-w-[1280px] mx-auto"
           style={{ maxHeight: "calc(100vh - 4.25rem)" }}
         >
           <Outlet />
