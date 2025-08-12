@@ -7,7 +7,7 @@ const Dashboard = () => {
     <>
       <TopBar title="Dashboard" definition="Welcome back, Rahul Sathyan" />
 
-      <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="p-6 grid grid-cols-2 gap-6">
         <DashboardCard
           title="Leads"
           total={1917}

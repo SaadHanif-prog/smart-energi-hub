@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <div className="w-full h-17 bg-primary px-4 py-2 flex justify-between shadow-md">
       {/* Logo Section */}
-      <div className="rounded-tr-2xl  flex items-center justify-center ">
+      <div className="rounded-tr-2xl hidden lg:flex items-center justify-center ">
         <img
           src="/images/logo.png"
           alt="Smart Energi Hub Logo"
@@ -14,7 +14,7 @@ const Navbar = () => {
       </div>
 
       {/* Search Box */}
-      <div className="flex items-center bg-white rounded px-3 py-1 w-md  md:w-xl lg-w-3xl">
+      <div className="flex items-center bg-white rounded px-3 py-1 w-sm lg-w-2xl">
         <Search className="text-primaryDark" size={25} />
         <input
           type="text"
