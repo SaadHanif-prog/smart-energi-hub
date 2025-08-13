@@ -4,7 +4,7 @@ import { useState } from "react";
 import TopBar from "../components/common/topbar";
 import HeaderControls from "../components/common/header-controls";
 import TableHeader from "../components/common/table-header";
-import FloorPlanEditor from "../components/common/react-konva";
+import FloorPlanEditor from "../components/properties/floor-plan-editor";
 
 const Properties = () => {
   const sampleData = [

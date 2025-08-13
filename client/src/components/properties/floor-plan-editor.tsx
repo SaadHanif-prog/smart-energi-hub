@@ -2,20 +2,16 @@ import { useRef, useState, useEffect } from "react";
 import { Stage, Layer, Line, Image as KonvaImage } from "react-konva";
 import useImage from "use-image";
 
-interface LineData {
-  points: number[];
-  color: string;
-  width: number;
-  tool: "pen" | "eraser";
-}
+// Types
+import type {
+  LineData,
+  FloorPlanEditorProps,
+} from "../../types/properties/floorplan";
 
 const FloorPlanEditor = ({
   imageUrl,
   setIsFloorPlanEditorOpen,
-}: {
-  imageUrl: string;
-  setIsFloorPlanEditorOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+}: FloorPlanEditorProps) => {
   const [image] = useImage(imageUrl);
   const [lines, setLines] = useState<LineData[]>([]);
   const [color, setColor] = useState("#ff0000");
@@ -209,6 +205,9 @@ const FloorPlanEditor = ({
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchMove={handleMouseMove}
+          onTouchEnd={handleMouseUp}
           ref={stageRef}
           style={{
             cursor: tool === "pen" ? "crosshair" : "cell",
