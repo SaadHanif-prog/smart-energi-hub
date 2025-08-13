@@ -9,7 +9,7 @@ import { CircleQuestionMark } from "lucide-react";
 
 const Layout = () => {
   return (
-    <div className="h-screen flex flex-col bg-layout overflow-scroll">
+    <div className="h-screen flex flex-col bg-layout">
       {/* Fixed Navbar */}
       <div className="fixed top-0 w-full z-50">
         <Navbar />
@@ -21,7 +21,7 @@ const Layout = () => {
         <Sidebar />
         {/* Scrollable Outlet Area */}
         <div
-          className="flex-1 max-w-[1280px] mx-auto"
+          className="flex-1 mx-auto overflow-y-scroll"
           style={{ maxHeight: "calc(100vh - 4.25rem)" }}
         >
           <Outlet />
