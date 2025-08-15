@@ -1,10 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Toaster } from "react-hot-toast";
 import "./index.css";
 import Router from "./routes/Route.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Router />
+    <>
+      <Router />
+      <Toaster position="top-center" reverseOrder={false} />
+    </>
   </StrictMode>
 );

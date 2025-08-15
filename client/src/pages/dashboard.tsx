@@ -1,13 +1,16 @@
 // Components
 import TopBar from "../components/common/topbar";
 import DashboardCard from "../components/dashboard/dashboard";
+import Map from "../components/dashboard/map";
 
 const Dashboard = () => {
   return (
     <>
       <TopBar title="Dashboard" definition="Welcome back, Rahul Sathyan" />
 
-      <div className="p-6 grid grid-cols-2 gap-6">
+      <Map />
+
+      <div className="flex gap-x-2 px-6">
         <DashboardCard
           title="Leads"
           total={1917}

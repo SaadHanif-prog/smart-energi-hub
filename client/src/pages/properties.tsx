@@ -11,7 +11,7 @@ const Properties = () => {
     {
       reference: "PROP-82669",
       addressLine1: "51 Broughton Street",
-      sitemap: "/images/floor-plan.png",
+      sitemap: "/images/floor-plan-one.png",
       postcode: "SW8 3QU",
       organisation: "SEH Approach Ltd",
       tags: "+",
@@ -19,7 +19,7 @@ const Properties = () => {
     {
       reference: "PROP-82640",
       addressLine1: "1 Holden Street",
-      sitemap: "/images/floor-plan.png",
+      sitemap: "/images/floor-plan-two.jpg",
       postcode: "SW11 5UW",
       organisation: "SEH Approach Ltd",
       tags: "+",
@@ -27,7 +27,7 @@ const Properties = () => {
     {
       reference: "PROP-78560",
       addressLine1: "53 Victoria Street",
-      sitemap: "/images/floor-plan.png",
+      sitemap: "/images/floor-plan-three.jpg",
       postcode: "ME12 1YB",
       organisation: "SEH Approach Ltd",
       tags: "+",
@@ -35,7 +35,7 @@ const Properties = () => {
     {
       reference: "PROP-77791",
       addressLine1: "3 Bellhurst Cottages",
-      sitemap: "/images/floor-plan.png",
+      sitemap: "/images/floor-plan-four.jpg",
       postcode: "TN32 5DN",
       organisation: "SEH Approach Ltd",
       tags: "+",
@@ -43,7 +43,7 @@ const Properties = () => {
     {
       reference: "PROP-77770",
       addressLine1: "17 Orchard Close",
-      sitemap: "/images/floor-plan.png",
+      sitemap: "/images/floor-plan-five.jpg",
       postcode: "TN34 2BZ",
       organisation: "SEH Approach Ltd",
       tags: "+",
@@ -51,7 +51,7 @@ const Properties = () => {
     {
       reference: "PROP-77750",
       addressLine1: "38 Firle Close",
-      sitemap: "/images/floor-plan.png",
+      sitemap: "/images/floor-plan-six.jpg",
       postcode: "TN35 5ET",
       organisation: "SEH Approach Ltd",
       tags: "+",
@@ -126,6 +126,7 @@ const Properties = () => {
                   {/* Sitemap */}
                   <td className="px-4 py-3 text-gray-700 text-sm">
                     <button
+                      className="cursor-pointer"
                       onClick={() => {
                         handleFloorPlanEditor(item.sitemap);
                       }}
