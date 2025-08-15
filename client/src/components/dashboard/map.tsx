@@ -29,12 +29,13 @@ export default function Map() {
   ];
 
   return (
-    <div className="p-6">
+    <div className="h-full w-full p-6">
       <MapContainer
         center={[54.0, -2.0]}
         zoom={6}
         style={{
-          height: "400px",
+          height: "100%",
+          minHeight: "400px",
           width: "100%",
           zIndex: 0,
         }}
