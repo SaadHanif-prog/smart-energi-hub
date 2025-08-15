@@ -33,7 +33,11 @@ export default function Map() {
       <MapContainer
         center={[54.0, -2.0]}
         zoom={6}
-        style={{ height: "400px", width: "100%" }}
+        style={{
+          height: "400px",
+          width: "100%",
+          zIndex: 0,
+        }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
