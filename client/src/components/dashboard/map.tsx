@@ -1,5 +1,18 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+// Import marker images
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+});
 
 export default function Map() {
   const locations: { name: string; coords: [number, number] }[] = [
@@ -18,8 +31,8 @@ export default function Map() {
   return (
     <div className="p-6">
       <MapContainer
-        center={[54.0, -2.0]} // Roughly UK center
-        zoom={5}
+        center={[54.0, -2.0]}
+        zoom={6}
         style={{ height: "400px", width: "100%" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
