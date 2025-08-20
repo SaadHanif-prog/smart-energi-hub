@@ -13,7 +13,7 @@ const {
 const {
   validateCreateContact,
   validateUpdateContact,
-} = require("../validators/contact-validator");
+} = require("../validators/contacts-validator");
 
 // Validation error handler
 const { handleValidationErrors } = require("../utils/error-handlers");

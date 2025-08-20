@@ -1,6 +1,7 @@
 const asyncHandler = require("../utils/async-handler");
 const ContactModel = require("../models/contacts.model");
 
+// Create Contact
 const createContact = asyncHandler(async (req, res) => {
   const { reference, title, firstname, surname, contact, email } = req.body;
 
@@ -20,6 +21,7 @@ const createContact = asyncHandler(async (req, res) => {
   });
 });
 
+// Get All Contacts
 const getAllContacts = asyncHandler(async (_, res) => {
   const contacts = await ContactModel.find();
 
@@ -30,6 +32,7 @@ const getAllContacts = asyncHandler(async (_, res) => {
   });
 });
 
+// Update Contact
 const updateContact = asyncHandler(async (req, res) => {
   const contactID = req.params.id;
 
@@ -60,6 +63,7 @@ const updateContact = asyncHandler(async (req, res) => {
   });
 });
 
+// Delete Contact
 const deleteContact = asyncHandler(async (req, res) => {
   const contactID = req.params.id;
 
