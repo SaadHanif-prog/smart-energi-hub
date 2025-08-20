@@ -1,11 +1,11 @@
 const asyncHandler = require("../utils/async-handler");
-const ProjectsModel = require("../models/projects.model");
+const ProjectModel = require("../models/projects.model");
 
 // Create Project
 const createProject = asyncHandler(async (req, res) => {
   const { name, organisation, reference } = req.body;
 
-  const newProject = await ProjectsModel.create({
+  const newProject = await ProjectModel.create({
     name,
     organisation,
     reference,
@@ -20,7 +20,7 @@ const createProject = asyncHandler(async (req, res) => {
 
 // Get All Projects
 const getAllProjects = asyncHandler(async (_, res) => {
-  const projects = await ProjectsModel.find();
+  const projects = await ProjectModel.find();
 
   return res.status(200).json({
     success: true,
@@ -41,7 +41,7 @@ const updateProject = asyncHandler(async (req, res) => {
 
   const { name, organisation, reference } = req.body;
 
-  const updatedProject = await ProjectsModel.findByIdAndUpdate(
+  const updatedProject = await ProjectModel.findByIdAndUpdate(
     projectID,
     { name, organisation, reference },
     { new: true, runValidators: true }
@@ -70,7 +70,7 @@ const deleteProject = asyncHandler(async (req, res) => {
     throw error;
   }
 
-  const deletedProject = await ProjectsModel.findByIdAndDelete(projectID);
+  const deletedProject = await ProjectModel.findByIdAndDelete(projectID);
   if (!deletedProject) {
     const error = new Error("Project with this id doesn't exist.");
     error.status = 404;

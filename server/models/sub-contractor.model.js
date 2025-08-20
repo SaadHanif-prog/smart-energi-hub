@@ -1,7 +1,17 @@
 const mongoose = require("mongoose");
 
-const PropertySchema = new mongoose.Schema(
+const subContractorSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    registrationNumber: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     addressLine1: {
       type: String,
       required: true,
@@ -12,7 +22,6 @@ const PropertySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
     town: {
       type: String,
       trim: true,
@@ -141,5 +150,5 @@ const PropertySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const PropertyModel = mongoose.model("Property", PropertySchema);
-module.exports = PropertyModel;
+const SubContractorModel = mongoose.model("Subcontractor", subContractorSchema);
+module.exports = SubContractorModel;

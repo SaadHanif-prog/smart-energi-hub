@@ -1,5 +1,5 @@
 const asyncHandler = require("../utils/async-handler");
-const LeadModel = require("../models/lead.model");
+const LeadModel = require("../models/leads.model");
 
 // Create Lead
 const createLead = asyncHandler(async (req, res) => {

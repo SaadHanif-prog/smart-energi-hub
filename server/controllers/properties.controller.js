@@ -1,11 +1,11 @@
 const asyncHandler = require("../utils/async-handler");
-const PropertiesModel = require("../models/properties.model");
+const PropertyModel = require("../models/properties.model");
 
 // Create Property
 const createProperty = asyncHandler(async (req, res) => {
   const propertyData = req.body;
 
-  const newProperty = await PropertiesModel.create(propertyData);
+  const newProperty = await PropertyModel.create(propertyData);
 
   return res.status(201).json({
     success: true,
@@ -16,7 +16,7 @@ const createProperty = asyncHandler(async (req, res) => {
 
 // Get All Properties
 const getAllProperties = asyncHandler(async (_, res) => {
-  const properties = await PropertiesModel.find();
+  const properties = await PropertyModel.find();
 
   return res.status(200).json({
     success: true,
@@ -37,7 +37,7 @@ const updateProperty = asyncHandler(async (req, res) => {
 
   const propertyData = req.body;
 
-  const updatedProperty = await PropertiesModel.findByIdAndUpdate(
+  const updatedProperty = await PropertyModel.findByIdAndUpdate(
     propertyID,
     propertyData,
     { new: true, runValidators: true }
@@ -66,7 +66,7 @@ const deleteProperty = asyncHandler(async (req, res) => {
     throw error;
   }
 
-  const deletedProperty = await PropertiesModel.findByIdAndDelete(propertyID);
+  const deletedProperty = await PropertyModel.findByIdAndDelete(propertyID);
   if (!deletedProperty) {
     const error = new Error("Property with this id doesn't exist.");
     error.status = 404;
