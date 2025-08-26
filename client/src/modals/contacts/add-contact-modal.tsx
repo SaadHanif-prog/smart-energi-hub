@@ -14,7 +14,11 @@ const AddContactModal = ({isOpen, onClose, onSubmit, isLoading}: AddContactModal
   const {register, handleSubmit, formState: { errors }, reset} = useForm<CreateContact>();
 
   const onSubmitForm = (data: CreateContact) => {
-    onSubmit(data, reset);
+    const filteredObj = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== "" && value !== null)
+    ) as CreateContact;
+
+    onSubmit(filteredObj, reset);
   };
 
   if (!isOpen) return null;

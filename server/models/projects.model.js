@@ -8,6 +8,7 @@ const ProjectSchema = new mongoose.Schema(
     },
     organisation: {
       type: String,
+      default : null
     },
     reference: {
       type: String,

@@ -13,6 +13,7 @@ import MaterialProfile from "../pages/material-profiles";
 import DataMatch from "../pages/datamatch";
 import SignatureRequests from "../pages/signature-requests";
 import ProtectedRoute from "../components/auth/protected-route";
+import TestProperties from "../pages/properties-test";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -31,6 +32,7 @@ const Router = () => {
         { path: "", element: <Dashboard /> },
         { path: "/contacts", element: <Contact /> },
         { path: "/properties", element: <Properties /> },
+        { path: "/properties-test", element: <TestProperties /> },
         { path: "/projects", element: <Projects /> },
         { path: "/leads", element: <Leads /> },
         { path: "/jobs", element: <Jobs /> },

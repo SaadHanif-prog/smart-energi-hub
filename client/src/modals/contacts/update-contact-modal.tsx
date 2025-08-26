@@ -6,7 +6,7 @@ import type { UpdateContact } from "../../types/contacts.types";
 type UpdateContactModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: UpdateContact, resetFields: () => void) => void;
+  onSubmit: (data: UpdateContact) => void;
   isLoading: boolean;
   initialData?: UpdateContact; 
 };
@@ -24,7 +24,11 @@ const UpdateContactModal = ({ isOpen, onClose, onSubmit, isLoading, initialData}
   }, [initialData, reset])
 
   const onSubmitForm = (data: UpdateContact) => {
-    onSubmit(data, reset);
+    const filteredObj = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== "" && value !== null)
+    ) as UpdateContact;
+
+    onSubmit(filteredObj);
   };
 
   if (!isOpen) return null;

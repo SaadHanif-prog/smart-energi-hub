@@ -35,6 +35,11 @@ export const navlinks: NavLinks[] = [
     path: "/properties",
     icon: <Home size={25} />,
   },
+   {
+    title: "Test Properties",
+    path: "/properties-test",
+    icon: <Home size={25} />,
+  },
   {
     title: "Projects",
     path: "/projects",

@@ -20,11 +20,18 @@ const ContactsPage = () => {
   const { mutate: updateContact, status : updateContactStatus} = useUpdateContact();
   const { mutate: deleteContact} = useDeleteContact();
 
-
-
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [initialDataForUpdate, setInitialDataForUpdate] = useState<UpdateContact | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredContacts = contacts?.filter(contact =>
+  contact.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  contact.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  contact.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  contact.contact.includes(searchQuery) 
+  ) || [];
+
 
   const handleAddContact = (data: CreateContact, resetFields: () => void) => {
     addContact(data, {
@@ -63,9 +70,9 @@ const ContactsPage = () => {
   { key: "email", title: "Email" },
 ];
 
-  if (isLoading) return <Loading/>
+  if (isLoading) return <Loading page={"contacts"}/>
 
-  if (isError) return <Error error={error}/>
+  if (isError) return <Error error={error} page={"contacts"}/>
    
   return (
     <>
@@ -75,24 +82,35 @@ const ContactsPage = () => {
         action={
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="bg-primaryDark text-white px-4 py-2 rounded cursor-pointer"
+            className="bg-primaryDark border-primaryDark text-white px-4 py-2 rounded cursor-pointer"
           >
             Add Contact
           </button>
+        }
+        search={
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search contacts..."
+            className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primaryDark"
+          />
         }
       />
 
       <main className="flex min-h-screen flex-col items-center justify-between p-6">
         <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
           <Table<Contact>
-            data={contacts || []}
+            data={filteredContacts || []}
             columns={columns}
             actions={{
               edit: (row) => {
                 setInitialDataForUpdate(row);
                 setIsUpdateModalOpen(true);
               },
-              delete: (row) => {handleDeleteContact(row._id)},
+              delete: (row) => {
+                handleDeleteContact(row._id);
+              },
             }}
           />
         </div>
