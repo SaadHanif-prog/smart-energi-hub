@@ -16,12 +16,12 @@ const Layout = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex flex-1 pt-[64px] min-w-[800px]">
+      <div className="flex pt-[64px] min-w-[800px]">
         {/* Sidebar */}
         <Sidebar />
         {/* Scrollable Outlet Area */}
         <div
-          className="flex-1 mx-auto overflow-y-scroll"
+          className="flex-1 overflow-y-scroll"
           style={{ maxHeight: "calc(100vh - 4.25rem)" }}
         >
           <Outlet />

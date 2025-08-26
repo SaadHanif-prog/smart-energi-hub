@@ -1,3 +1,7 @@
+// Types
+import type { Property } from "./properties.types";
+import type { Contact } from "./contacts.types";
+
 export type Lead = {
   _id: string;
   reference?: string;
@@ -28,3 +32,8 @@ export type LeadsApiResponse = {
 };
 
 export type ErrorResponse = { message: string };
+
+export type LeadWithRelations = Omit<Lead, "property" | "contact"> & {
+  property?: Property;
+  contact?: Contact;
+};

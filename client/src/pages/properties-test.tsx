@@ -61,7 +61,6 @@ const TestProperties = () => {
 
   // Columns definition
   const columns: Column<Property>[] = [
-    { key: "_id", title: "ID" },
     { key: "addressLine1", title: "Address Line 1" },
     { key: "addressLine2", title: "Address Line 2" },
     { key: "addressLine3", title: "Address Line 3" },
@@ -95,8 +94,6 @@ const TestProperties = () => {
     { key: "eastings", title: "Eastings" },
     { key: "northings", title: "Northings" },
     { key: "suOrganisationIndicator", title: "SU Organisation Indicator" },
-    { key: "createdAt", title: "Created At" },
-    { key: "updatedAt", title: "Updated At" },
   ];
 
   if (isLoading) return <Loading page={"properties"} />;

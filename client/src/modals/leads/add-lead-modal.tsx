@@ -1,20 +1,41 @@
 import { useForm } from "react-hook-form";
 // Types
 import type { CreateLead } from "../../types/leads.types";
+import type { Property } from "../../types/properties.types";
+import type { Contact } from "../../types/contacts.types";
 
 type AddLeadModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: CreateLead, resetFields: () => void) => void;
   isLoading: boolean;
+  contacts: Contact[] | undefined;
+  properties: Property[] | undefined;
 };
 
-const AddLeadModal = ({ isOpen, onClose, onSubmit, isLoading }: AddLeadModalProps) => {
-
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateLead>();
+const AddLeadModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isLoading,
+  contacts,
+  properties,
+}: AddLeadModalProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<CreateLead>();
 
   const onSubmitForm = (data: CreateLead) => {
-    onSubmit(data, reset);
+    const filteredObj = Object.fromEntries(
+      Object.entries(data).filter(
+        ([_, value]) => value !== "" && value !== null
+      )
+    ) as CreateLead;
+
+    onSubmit(filteredObj, reset);
   };
 
   if (!isOpen) return null;
@@ -36,6 +57,7 @@ const AddLeadModal = ({ isOpen, onClose, onSubmit, isLoading }: AddLeadModalProp
         <h2 className="text-xl font-semibold mb-4">Add Lead</h2>
 
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
+          {/* Reference */}
           <div>
             <input
               {...register("reference")}
@@ -44,6 +66,7 @@ const AddLeadModal = ({ isOpen, onClose, onSubmit, isLoading }: AddLeadModalProp
             />
           </div>
 
+          {/* Industry */}
           <div>
             <input
               {...register("industry", { required: "Industry is required" })}
@@ -55,6 +78,7 @@ const AddLeadModal = ({ isOpen, onClose, onSubmit, isLoading }: AddLeadModalProp
             )}
           </div>
 
+          {/* Source */}
           <div>
             <input
               {...register("source", { required: "Source is required" })}
@@ -66,22 +90,39 @@ const AddLeadModal = ({ isOpen, onClose, onSubmit, isLoading }: AddLeadModalProp
             )}
           </div>
 
+          {/* Property Dropdown */}
           <div>
-            <input
+            <select
               {...register("property")}
-              placeholder="Property ID (optional)"
               className="border p-2 w-full"
-            />
+              defaultValue=""
+            >
+              <option value="">Select a property</option>
+              {properties?.map((p) => (
+                <option key={p._id} value={p._id}>
+                  {p.addressLine1}
+                </option>
+              ))}
+            </select>
           </div>
 
+          {/* Contact Dropdown */}
           <div>
-            <input
+            <select
               {...register("contact")}
-              placeholder="Contact ID (optional)"
               className="border p-2 w-full"
-            />
+              defaultValue=""
+            >
+              <option value="">Select a contact</option>
+              {contacts?.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.firstname}
+                </option>
+              ))}
+            </select>
           </div>
 
+          {/* Actions */}
           <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
@@ -105,6 +146,6 @@ const AddLeadModal = ({ isOpen, onClose, onSubmit, isLoading }: AddLeadModalProp
       </div>
     </div>
   );
-}
+};
 
 export default AddLeadModal;

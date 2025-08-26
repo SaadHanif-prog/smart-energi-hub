@@ -22,13 +22,15 @@ const Table = <T extends object>({ data, columns, actions }: TableProps<T>) => {
   if (!data || data.length === 0) return <p className="p-4">No data found.</p>;
 
   return (
-    <table className="min-w-full text-sm text-left border-collapse">
+
+    <div className="overflow-y-auto rounded-sm">
+      <table className="min-w-full text-sm text-left">
       <thead>
         <tr className="bg-gray-100 border-b border-gray-300 text-gray-700">
           {/* <th className="px-4 py-3"></th> */}
           <th className="px-4 py-3">Action</th>
           {columns.map((col) => (
-            <th key={String(col.key)} className="px-4 py-3 capitalize">
+            <th key={String(col.key)} className="px-4 py-3 capitalize min-w-[200px]">
               {col.title}
             </th>
           ))}
@@ -88,6 +90,9 @@ const Table = <T extends object>({ data, columns, actions }: TableProps<T>) => {
         ))}
       </tbody>
     </table>
+      </div>
+
+    
   );
 };
 

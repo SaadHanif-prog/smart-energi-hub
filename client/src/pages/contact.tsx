@@ -32,7 +32,7 @@ const ContactsPage = () => {
   contact.contact.includes(searchQuery) 
   ) || [];
 
-
+  console.log("contacts", contacts)
   const handleAddContact = (data: CreateContact, resetFields: () => void) => {
     addContact(data, {
       onSuccess: () => {

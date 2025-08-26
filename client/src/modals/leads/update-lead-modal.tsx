@@ -2,30 +2,47 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 // Types
 import type { UpdateLead } from "../../types/leads.types";
+import type { Property } from "../../types/properties.types";
+import type { Contact } from "../../types/contacts.types";
 
 type UpdateLeadModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: UpdateLead, resetFields: () => void) => void;
+  onSubmit: (data: UpdateLead) => void;
   isLoading: boolean;
   initialData?: UpdateLead;
+  contacts: Contact[] | undefined;
+  properties: Property[] | undefined;
 };
 
-const UpdateLeadModal = ({ isOpen, onClose, onSubmit, isLoading, initialData }: UpdateLeadModalProps) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<UpdateLead>({
+const UpdateLeadModal = ({isOpen, onClose, onSubmit, isLoading, initialData, contacts, properties}: UpdateLeadModalProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<UpdateLead>({
     defaultValues: initialData || {},
   });
+
 
   // Reset form whenever initialData changes
   useEffect(() => {
     if (initialData) {
-      reset(initialData);
+      reset({
+        ...initialData,
+        property: initialData.property || "",
+        contact: initialData.contact || "",
+      });
     }
   }, [initialData, reset]);
 
   const onSubmitForm = (data: UpdateLead) => {
-    onSubmit(data, reset);
-  };
+  const filteredObj = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== "" && value !== null)
+    ) as UpdateLead;
+
+    onSubmit(filteredObj);  };
 
   if (!isOpen) return null;
 
@@ -46,6 +63,7 @@ const UpdateLeadModal = ({ isOpen, onClose, onSubmit, isLoading, initialData }: 
         <h2 className="text-xl font-semibold mb-4">Update Lead</h2>
 
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
+          {/* Reference */}
           <div>
             <input
               {...register("reference")}
@@ -54,6 +72,7 @@ const UpdateLeadModal = ({ isOpen, onClose, onSubmit, isLoading, initialData }: 
             />
           </div>
 
+          {/* Industry */}
           <div>
             <input
               {...register("industry", { required: "Industry is required" })}
@@ -65,6 +84,7 @@ const UpdateLeadModal = ({ isOpen, onClose, onSubmit, isLoading, initialData }: 
             )}
           </div>
 
+          {/* Source */}
           <div>
             <input
               {...register("source", { required: "Source is required" })}
@@ -76,22 +96,39 @@ const UpdateLeadModal = ({ isOpen, onClose, onSubmit, isLoading, initialData }: 
             )}
           </div>
 
+          {/* Property Dropdown */}
           <div>
-            <input
+            <select
               {...register("property")}
-              placeholder="Property ID (optional)"
               className="border p-2 w-full"
-            />
+              defaultValue={initialData?.property || ""}
+            >
+              <option value="">Select a property</option>
+              {properties?.map((p) => (
+                <option key={p._id} value={p._id}>
+                  {p.addressLine1}
+                </option>
+              ))}
+            </select>
           </div>
 
+          {/* Contact Dropdown */}
           <div>
-            <input
+            <select
               {...register("contact")}
-              placeholder="Contact ID (optional)"
               className="border p-2 w-full"
-            />
+              defaultValue={initialData?.contact || ""} 
+            >
+              <option value="">Select a contact</option>
+              {contacts?.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.firstname}
+                </option>
+              ))}
+            </select>
           </div>
 
+          {/* Actions */}
           <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
@@ -115,6 +152,6 @@ const UpdateLeadModal = ({ isOpen, onClose, onSubmit, isLoading, initialData }: 
       </div>
     </div>
   );
-}
+};
 
 export default UpdateLeadModal;
