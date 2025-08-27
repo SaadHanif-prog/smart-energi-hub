@@ -13,13 +13,7 @@ type AddLeadModalProps = {
   properties: Property[] | undefined;
 };
 
-const AddLeadModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  isLoading,
-  contacts,
-  properties,
+const AddLeadModal = ({isOpen, onClose, onSubmit, isLoading, contacts, properties,
 }: AddLeadModalProps) => {
   const {
     register,

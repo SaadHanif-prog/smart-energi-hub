@@ -21,8 +21,6 @@ const JobsPage = () => {
   const { mutate: updateJob, status: updateJobStatus } = useUpdateJob();
   const { mutate: deleteJob } = useDeleteJob();
 
-  console.log(jobs)
-
   const { data: leads } = useLeads();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

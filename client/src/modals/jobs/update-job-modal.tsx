@@ -13,13 +13,7 @@ type UpdateJobModalProps = {
   leads: Lead[] | undefined;
 };
 
-const UpdateJobModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  isLoading,
-  initialData,
-  leads,
+const UpdateJobModal = ({isOpen, onClose, onSubmit, isLoading, initialData, leads,
 }: UpdateJobModalProps) => {
   const {
     register,

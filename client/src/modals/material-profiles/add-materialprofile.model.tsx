@@ -9,9 +9,7 @@ type AddMaterialProfileModalProps = {
   isLoading: boolean;
 };
 
-const AddMaterialProfileModal = ({
-  isOpen, onClose, onSubmit, isLoading,
-}: AddMaterialProfileModalProps) => {
+const AddMaterialProfileModal = ({isOpen, onClose, onSubmit, isLoading}: AddMaterialProfileModalProps) => {
   const {
     register,
     handleSubmit,
