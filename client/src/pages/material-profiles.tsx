@@ -1,91 +1,152 @@
+import { toast } from "react-hot-toast";
+import { useState } from "react";
 // Components
-import TopBar from "../components/common/topbar";
-import HeaderControls from "../components/common/header-controls";
 import Table from "../components/common/table";
+import TopBar from "../components/common/topbar";
+import Loading from "../components/common/loading";
+import Error from "../components/common/error";
+// Modals
+import AddMaterialProfileModal from "../modals/material-profiles/add-materialprofile.model";
+import UpdateMaterialProfileModal from "../modals/material-profiles/update-materialprofile.model";
+// Hooks
+import {useMaterialProfiles, useAddMaterialProfile, useUpdateMaterialProfile, useDeleteMaterialProfile} from "../hooks/material-profiles.hook";
+// Types
+import type { MaterialProfile, CreateMaterialProfile, UpdateMaterialProfile } from "../types/material-profile.types";
+import type { Column } from "../components/common/table";
 
-const MaterialProfile = () => {
-  const sampleData = [
-    {
-      materialId: "MAT-30001",
-      name: "Concrete - Grade M30",
-      category: "Concrete",
-      unit: "Cubic Meter",
-      supplier: "Prime Concrete Ltd",
-      cost: 75.0,
-      availability: "In Stock",
-      addedAt: "2025-07-28",
-    },
-    {
-      materialId: "MAT-30002",
-      name: "Steel Rebars - TMT 12mm",
-      category: "Steel",
-      unit: "Ton",
-      supplier: "SteelWorks Inc.",
-      cost: 620.0,
-      availability: "Low Stock",
-      addedAt: "2025-07-26",
-    },
-    {
-      materialId: "MAT-30003",
-      name: "Plywood Sheet 18mm",
-      category: "Wood",
-      unit: "Sheet",
-      supplier: "SEH Frame Services",
-      cost: 18.5,
-      availability: "In Stock",
-      addedAt: "2025-07-20",
-    },
-    {
-      materialId: "MAT-30004",
-      name: "Copper Wiring 4mm",
-      category: "Electrical",
-      unit: "Roll",
-      supplier: "Bright Build Co.",
-      cost: 45.0,
-      availability: "Out of Stock",
-      addedAt: "2025-07-18",
-    },
-    {
-      materialId: "MAT-30005",
-      name: "PVC Pipes 6 inch",
-      category: "Plumbing",
-      unit: "Piece",
-      supplier: "HVAC Pros",
-      cost: 9.75,
-      availability: "In Stock",
-      addedAt: "2025-07-30",
-    },
+const MaterialProfilesPage = () => {
+  const { data: profiles, isLoading, isError, error } = useMaterialProfiles();
+  const { mutate: addProfile, status: addStatus } = useAddMaterialProfile();
+  const { mutate: updateProfile, status: updateStatus } = useUpdateMaterialProfile();
+  const { mutate: deleteProfile } = useDeleteMaterialProfile();
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [initialDataForUpdate, setInitialDataForUpdate] = useState<UpdateMaterialProfile | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredProfiles = profiles?.filter(
+    (p) =>
+      p.improvementType?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.manufacturer?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.model?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+
+  const handleAdd = (data: CreateMaterialProfile, resetFields: () => void) => {
+    addProfile(data, {
+      onSuccess: () => {
+        toast.success("Material Profile added successfully!");
+        resetFields();
+        setIsAddModalOpen(false);
+      },
+    });
+  };
+
+  const handleUpdate = (data: UpdateMaterialProfile) => {
+    updateProfile(data, {
+      onSuccess: () => {
+        toast.success("Material Profile updated successfully!");
+        setIsUpdateModalOpen(false);
+      },
+    });
+  };
+
+  const handleDelete = (_id: string) => {
+    deleteProfile(_id, {
+      onSuccess: () => {
+        toast.success("Material Profile deleted successfully!");
+      },
+    });
+  };
+
+  // Columns definition
+  const columns: Column<MaterialProfile>[] = [
+    { key: "improvementType", title: "Improvement Type" },
+    { key: "type", title: "Type" },
+    { key: "manufacturer", title: "Manufacturer" },
+    { key: "model", title: "Model" },
+    { key: "modelQualifier", title: "Model Qualifier" },
+    { key: "pcdfId", title: "PCDF ID" },
+    { key: "subType", title: "Sub Type" },
+    { key: "combinationBoiler", title: "Combination Boiler" },
+    { key: "isdefault", title: "Default" },
   ];
+
+  if (isLoading) return <Loading page={"material-profiles"} />;
+  if (isError) return <Error error={error} page={"material-profiles"} />;
 
   return (
     <>
       <TopBar
         title="Material Profiles"
-        definition="Add or manage your material profiles here"
+        definition="Create and manage material profiles here"
+        action={
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="bg-primaryDark border-primaryDark text-white px-4 py-2 rounded cursor-pointer"
+          >
+            Add Material Profile
+          </button>
+        }
+        search={
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search material profiles..."
+            className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primaryDark"
+          />
+        }
       />
+
       <main className="flex min-h-screen flex-col items-center justify-between p-6">
         <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
-          {/* Header Controls */}
-          <HeaderControls createBtnText="Create Material Profile" />
+          <Table<MaterialProfile>
+            data={filteredProfiles || []}
+            columns={columns}
+            actions={{
+              edit: (row: MaterialProfile) => {
+                setInitialDataForUpdate({
+                  _id: row._id,
+                  improvementType: row.improvementType,
+                  type: row.type,
+                  manufacturer: row.manufacturer,
+                  model: row.model,
+                  modelQualifier: row.modelQualifier,
+                  pcdfId: row.pcdfId,
+                  subType: row.subType,
+                  combinationBoiler: row.combinationBoiler,
+                  isdefault: row.isdefault,
+                  manufacturerInformation: row.manufacturerInformation as string || null, 
+                });
+                setIsUpdateModalOpen(true);
+              },
 
-          {/* Table */}
-          <Table
-            data={sampleData}
-            visibleColumns={[
-              "materialId",
-              "name",
-              "category",
-              "unit",
-              "supplier",
-              "cost",
-              "availability",
-              "addedAt",
-            ]}
+              delete: (row) => handleDelete(row._id),
+            }}
           />
         </div>
       </main>
+
+      {/* Add Modal */}
+      <AddMaterialProfileModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAdd}
+        isLoading={addStatus === "pending"}
+      />
+
+      {/* Update Modal */}
+      <UpdateMaterialProfileModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+        onSubmit={handleUpdate}
+        isLoading={updateStatus === "pending"}
+        initialData={initialDataForUpdate}
+      />
     </>
   );
 };
 
-export default MaterialProfile;
+export default MaterialProfilesPage;
