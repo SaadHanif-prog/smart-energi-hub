@@ -26,3 +26,20 @@ export type ProjectsApiResponse = {
 };
 
 export type ErrorResponse = { message: string };
+
+// Modal types
+
+export type AddProjectModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: CreateProject, resetFields: () => void) => void;
+  isLoading: boolean;
+};
+
+export type UpdateProjectModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: UpdateProject) => void;
+  isLoading: boolean;
+  initialData?: UpdateProject;
+};

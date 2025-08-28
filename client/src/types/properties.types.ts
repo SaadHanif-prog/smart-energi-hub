@@ -58,3 +58,38 @@ export type PropertiesApiResponse = {
 };
 
 export type ErrorResponse = { message: string };
+
+
+// Modal Types
+
+export type AddPropertyFieldType = {
+  name: keyof CreateProperty;
+  placeholder?: string;
+  required?: string | false;
+  type: "text" | "number" | "checkbox";
+  label?: string;
+};
+
+export type UpdatePropertyFieldType = {
+  name: keyof UpdateProperty; 
+  placeholder?: string;
+  required?: string | false;
+  type: "text" | "number" | "checkbox";
+  label?: string; 
+};
+
+export type AddPropertyModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: CreateProperty, resetFields: () => void) => void;
+  isLoading: boolean;
+};
+
+export type UpdatePropertyModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: UpdateProperty) => void;
+  isLoading: boolean;
+  initialData?: UpdateProperty;
+};
+

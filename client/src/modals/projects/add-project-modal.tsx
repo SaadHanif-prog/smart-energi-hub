@@ -1,13 +1,6 @@
 import { useForm } from "react-hook-form";
 // Types
-import type { CreateProject } from "../../types/projects.types";
-
-type AddProjectModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: CreateProject, resetFields: () => void) => void;
-  isLoading: boolean;
-};
+import type { CreateProject, AddProjectModalProps } from "../../types/projects.types";
 
 const AddProjectModal = ({ isOpen, onClose, onSubmit, isLoading }: AddProjectModalProps) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateProject>();

@@ -84,8 +84,6 @@ const flattenedLeads: FlattenedLead[] = filteredLeads.map((lead) => ({
   contactPhone: lead.contact?.contact ?? undefined,
 }));
 
-
-
 // Columns definition
 const columns: Column<FlattenedLead>[] = [
   { key: "reference", title: "Reference" },

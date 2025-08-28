@@ -1,15 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 // Types
-import type { UpdateProject } from "../../types/projects.types";
-
-type UpdateProjectModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: UpdateProject) => void;
-  isLoading: boolean;
-  initialData?: UpdateProject;
-};
+import type { UpdateProject, UpdateProjectModalProps } from "../../types/projects.types";
 
 const UpdateProjectModal = ({ isOpen, onClose, onSubmit, isLoading, initialData }: UpdateProjectModalProps) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<UpdateProject>({
