@@ -1,15 +1,10 @@
 import apiClient from "../api/apiClient";
-import type {
-  Job,
-  CreateJob,
-  UpdateJob,
-  JobsApiResponse,
-} from "../types/jobs.types";
+import type {Job, CreateJob, UpdateJob, JobsApiResponse, JobWithRelations} from "../types/jobs.types";
 
 import ENDPOINTS from "./endpoints";
 
 // Get all jobs
-export const getJobs = async (): Promise<Job[]> => {
+export const getJobs = async (): Promise<JobWithRelations[]> => {
   const { data } = await apiClient.get<JobsApiResponse>(ENDPOINTS.job);
   return data.data;
 };

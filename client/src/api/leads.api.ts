@@ -3,17 +3,17 @@ import type {
   Lead,
   CreateLead,
   UpdateLead,
-  LeadsApiResponse
+  LeadsApiResponse,
+  LeadWithRelations
 } from "../types/leads.types";
 
 import ENDPOINTS from "./endpoints";
 
 // Get all leads
-export const getLeads = async (): Promise<Lead[]> => {
+export const getLeads = async (): Promise<LeadWithRelations[]> => {
   const { data } = await apiClient.get<LeadsApiResponse>(ENDPOINTS.lead);
   return data.data;
 };
-
 // Create lead
 export const createLead = async (newLead: CreateLead): Promise<Lead> => {
   const { data } = await apiClient.post<Lead>(`${ENDPOINTS.lead}/create`, newLead);

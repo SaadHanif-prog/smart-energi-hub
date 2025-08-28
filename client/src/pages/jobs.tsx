@@ -12,7 +12,7 @@ import UpdateJobModal from "../modals/jobs/update-job-modal";
 import { useJobs, useAddJob, useUpdateJob, useDeleteJob } from "../hooks/jobs.hook";
 import { useLeads } from "../hooks/leads.hook";
 // Types
-import type { Job, CreateJob, UpdateJob, JobWithRelations } from "../types/jobs.types";
+import type { CreateJob, UpdateJob, JobWithRelations, FlattenedJob } from "../types/jobs.types";
 import type { Column } from "../components/common/table";
 
 const JobsPage = () => {
@@ -59,49 +59,49 @@ const filteredJobs = jobs?.filter(job =>
     });
   };
 
-const jobsWithRelations: JobWithRelations[] =
-  filteredJobs as JobWithRelations[];
 
-const flattenedJobs = jobsWithRelations.map((job) => {
+const jobsWithRelations: JobWithRelations[] = filteredJobs;
+
+const flattenedJobs: FlattenedJob[] = jobsWithRelations.map((job) => {
   const lead = job.lead;
 
   return {
     _id: job._id,
     jobType: job.jobType,
     jobSubType: job.jobSubType,
-    createdAt: job.createdAt,
-    updatedAt: job.updatedAt,
+    createdAt: job.createdAt.toString(),
+    updatedAt: job.updatedAt.toString(),
 
     // Lead fields
-    lead: lead?._id || "",
-    leadReference: lead?.reference,
-    leadIndustry: lead?.industry,
-    leadSource: lead?.source,
+    lead: lead?._id ?? "",
+    leadReference: lead?.reference ?? undefined,
+    leadIndustry: lead?.industry ?? undefined,
+    leadSource: lead?.source ?? undefined,
 
     // Property fields (nested inside lead)
-    property: lead?.property?._id || "",
-    addressLine1: lead?.property?.addressLine1,
-    postcode: lead?.property?.postcode,
-    town: lead?.property?.town,
-    country: lead?.property?.country,
-    administrativeArea: lead?.property?.administrativeArea,
-    buildingName: lead?.property?.buildingName,
-    buildingNumber: lead?.property?.buildingNumber,
-    county: lead?.property?.county,
+    property: lead?.property?._id ?? "",
+    addressLine1: lead?.property?.addressLine1 ?? undefined,
+    postcode: lead?.property?.postcode ?? undefined,
+    town: lead?.property?.town ?? undefined,
+    country: lead?.property?.country ?? undefined,
+    administrativeArea: lead?.property?.administrativeArea ?? undefined,
+    buildingName: lead?.property?.buildingName ?? undefined,
+    buildingNumber: lead?.property?.buildingNumber ?? undefined,
+    county: lead?.property?.county ?? undefined,
 
     // Contact fields (nested inside lead)
-    contact: lead?.contact?._id || "",
-    contactReference: lead?.contact?.reference,
-    title: lead?.contact?.title,
-    firstname: lead?.contact?.firstname,
-    surname: lead?.contact?.surname,
-    email: lead?.contact?.email,
-    contactPhone: lead?.contact?.contact,
+    contact: lead?.contact?._id ?? "",
+    contactReference: lead?.contact?.reference ?? undefined,
+    title: lead?.contact?.title ?? undefined,
+    firstname: lead?.contact?.firstname ?? undefined,
+    surname: lead?.contact?.surname ?? undefined,
+    email: lead?.contact?.email ?? undefined,
+    contactPhone: lead?.contact?.contact ?? undefined,
   };
 });
 
 
-  const columns: Column<any>[] = [
+  const columns: Column<FlattenedJob>[] = [
   { key: "jobType", title: "Job Type" },
   { key: "jobSubType", title: "Job SubType" },
   { key: "leadReference", title: "Lead Reference" },
@@ -152,7 +152,7 @@ const flattenedJobs = jobsWithRelations.map((job) => {
 
       <main className="flex min-h-screen flex-col items-center justify-between p-6">
         <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
-          <Table<Job>
+          <Table<FlattenedJob>
             data={flattenedJobs || []}
             columns={columns}
             actions={{

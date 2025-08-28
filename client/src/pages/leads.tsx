@@ -13,7 +13,7 @@ import { useLeads, useAddLead, useUpdateLead, useDeleteLead } from "../hooks/lea
 import { useProperties } from "../hooks/properties.hook";
 import { useContacts } from "../hooks/contact.hook";
 // Types
-import type { Lead, CreateLead, UpdateLead, LeadWithRelations } from "../types/leads.types";
+import type { CreateLead, UpdateLead, FlattenedLead } from "../types/leads.types";
 import type { Column } from "../components/common/table";
 
 const LeadsPage = () => {
@@ -66,32 +66,28 @@ const LeadsPage = () => {
   };
 
 
- const leadsWithRelations: LeadWithRelations[] = filteredLeads as LeadWithRelations[];
-
-
-const flattenedLeads = leadsWithRelations.map((lead) => ({
+const flattenedLeads: FlattenedLead[] = filteredLeads.map((lead) => ({
   _id: lead._id,
-  reference: lead.reference,
+  reference: lead.reference ?? "",
   industry: lead.industry,
   source: lead.source,
-  createdAt: lead.createdAt,
-  updatedAt: lead.updatedAt,
-  // property fields
-  property: lead.property?._id || "",
-  addressLine1: lead.property?.addressLine1,
-  town: lead.property?.town,
-  country: lead.property?.country,
-  // contact fields
-  contact: lead.contact?._id || "", 
-  firstname: lead.contact?.firstname,
-  surname: lead.contact?.surname,
-  email: lead.contact?.email,
-  contactPhone: lead.contact?.contact,
+  createdAt: lead.createdAt.toString(),
+  updatedAt: lead.updatedAt.toString(),
+  property: lead.property?._id ?? "",
+  addressLine1: lead.property?.addressLine1 ?? undefined,
+  town: lead.property?.town ?? undefined,
+  country: lead.property?.country ?? undefined,
+  contact: lead.contact?._id ?? "",
+  firstname: lead.contact?.firstname ?? undefined,
+  surname: lead.contact?.surname ?? undefined,
+  email: lead.contact?.email ?? undefined,
+  contactPhone: lead.contact?.contact ?? undefined,
 }));
 
 
+
 // Columns definition
-const columns: Column<any>[] = [
+const columns: Column<FlattenedLead>[] = [
   { key: "reference", title: "Reference" },
   { key: "industry", title: "Industry" },
   { key: "source", title: "Source" },
@@ -133,7 +129,7 @@ const columns: Column<any>[] = [
 
       <main className="flex min-h-screen flex-col items-center justify-between p-6">
         <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
-          <Table<Lead>
+          <Table<FlattenedLead>
             data={flattenedLeads || []}
             columns={columns}
             actions={{

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 // Types
 import type { UpdateJob } from "../../types/jobs.types";
-import type { Lead } from "../../types/leads.types";
+import type { LeadWithRelations } from "../../types/leads.types";
 
 type UpdateJobModalProps = {
   isOpen: boolean;
@@ -10,17 +10,11 @@ type UpdateJobModalProps = {
   onSubmit: (data: UpdateJob) => void;
   isLoading: boolean;
   initialData?: UpdateJob;
-  leads: Lead[] | undefined;
+  leads: LeadWithRelations[] | undefined;
 };
 
-const UpdateJobModal = ({isOpen, onClose, onSubmit, isLoading, initialData, leads,
-}: UpdateJobModalProps) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<UpdateJob>({
+const UpdateJobModal = ({isOpen, onClose, onSubmit, isLoading, initialData, leads}: UpdateJobModalProps) => {
+  const { register, handleSubmit, formState: { errors }, reset} = useForm<UpdateJob>({
     defaultValues: initialData || {},
   });
 

@@ -25,14 +25,49 @@ export type DeleteJob = {
 export type JobsApiResponse = {
   success: boolean;
   message: string;
-  data: Job[];
+  data: JobWithRelations[];
 };
 
 export type ErrorResponse = { message: string };
 
 export type JobWithRelations = Omit<Job, "lead"> & {
-  lead?: Lead & {
+    lead?: Lead & {
     property?: Property;
     contact?: Contact;
   };
 };
+
+export type FlattenedJob = {
+  _id: string;
+  jobType: string;
+  jobSubType: string;
+  createdAt: string;
+  updatedAt: string;
+
+  // Lead fields
+  lead: string;
+  leadReference?: string;
+  leadIndustry?: string;
+  leadSource?: string;
+
+  // Property fields
+  property: string;
+  addressLine1?: string;
+  postcode?: string;
+  town?: string;
+  country?: string;
+  administrativeArea?: string;
+  buildingName?: string;
+  buildingNumber?: string;
+  county?: string;
+
+  // Contact fields
+  contact: string;
+  contactReference?: string;
+  title?: string;
+  firstname?: string;
+  surname?: string;
+  email?: string;
+  contactPhone?: string;
+};
+

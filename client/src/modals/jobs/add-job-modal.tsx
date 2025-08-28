@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
 // Types
 import type { CreateJob } from "../../types/jobs.types";
-import type { Lead } from "../../types/leads.types";
+import type { LeadWithRelations } from "../../types/leads.types";
 
 type AddJobModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: CreateJob, resetFields: () => void) => void;
   isLoading: boolean;
-  leads: Lead[] | undefined;
+  leads: LeadWithRelations[] | undefined;
 };
 
 const AddJobModal = ({isOpen, onClose, onSubmit, isLoading, leads}: AddJobModalProps) => {

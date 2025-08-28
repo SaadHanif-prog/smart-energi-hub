@@ -3,14 +3,14 @@ import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
 // Types 
 import type { UseQueryResult } from "@tanstack/react-query"; 
-import type { Job, CreateJob, UpdateJob, ErrorResponse } from "../types/jobs.types";
+import type { CreateJob, UpdateJob, ErrorResponse, JobWithRelations } from "../types/jobs.types";
 // Api's
 import { getJobs, createJob, updateJob, deleteJob } from "../api/jobs.api";
 
 // Fetch all jobs
-export const useJobs = (): UseQueryResult<Job[], AxiosError<ErrorResponse>> => {
-  return useQuery<Job[], AxiosError<ErrorResponse>>({
-    queryKey: ["jobs"], 
+export const useJobs = (): UseQueryResult<JobWithRelations[], AxiosError<ErrorResponse>> => {
+  return useQuery<JobWithRelations[], AxiosError<ErrorResponse>>({
+    queryKey: ["jobs"],
     queryFn: getJobs,
   });
 };

@@ -3,13 +3,14 @@ import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
 // Types 
 import type { UseQueryResult } from "@tanstack/react-query"; 
-import type { Lead, CreateLead, UpdateLead, ErrorResponse } from "../types/leads.types";
+import type { CreateLead, UpdateLead, ErrorResponse, LeadWithRelations } from "../types/leads.types";
 // Api's
 import { getLeads, createLead, updateLead, deleteLead } from "../api/leads.api";
+
 // Fetch all leads
-export const useLeads = (): UseQueryResult<Lead[], AxiosError<ErrorResponse>> => {
-  return useQuery<Lead[], AxiosError<ErrorResponse>>({
-    queryKey: ["leads"], 
+export const useLeads = (): UseQueryResult<LeadWithRelations[], AxiosError<ErrorResponse>> => {
+  return useQuery<LeadWithRelations[], AxiosError<ErrorResponse>>({
+    queryKey: ["leads"],
     queryFn: getLeads,
   });
 };
