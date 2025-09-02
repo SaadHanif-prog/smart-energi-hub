@@ -3,7 +3,6 @@ import Layout from "../layout/layout";
 import LoginPage from "../pages/auth/loign";
 import Dashboard from "../pages/dashboard";
 import Contact from "../pages/contact";
-import Properties from "../pages/properties";
 import Projects from "../pages/projects";
 import Leads from "../pages/leads";
 import Jobs from "../pages/jobs";
@@ -13,7 +12,8 @@ import MaterialProfile from "../pages/material-profiles";
 import DataMatch from "../pages/datamatch";
 import SignatureRequests from "../pages/signature-requests";
 import ProtectedRoute from "../components/auth/protected-route";
-import TestProperties from "../pages/properties-test";
+import Properties from "../pages/properties";
+
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -32,7 +32,6 @@ const Router = () => {
         { path: "", element: <Dashboard /> },
         { path: "/contacts", element: <Contact /> },
         { path: "/properties", element: <Properties /> },
-        { path: "/properties-test", element: <TestProperties /> },
         { path: "/projects", element: <Projects /> },
         { path: "/leads", element: <Leads /> },
         { path: "/jobs", element: <Jobs /> },

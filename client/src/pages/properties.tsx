@@ -1,165 +1,191 @@
+import { toast } from "react-hot-toast";
 import { useState } from "react";
-
 // Components
+import Table from "../components/common/table";
 import TopBar from "../components/common/topbar";
-import HeaderControls from "../components/common/header-controls";
-import TableHeader from "../components/common/table-header";
+import Loading from "../components/common/loading";
+import Error from "../components/common/error";
 import FloorPlanEditor from "../components/properties/floor-plan-editor";
+// Modals
+import AddPropertyModal from "../modals/properties/add.property-model";
+import UpdatePropertyModal from "../modals/properties/update-property-modal";
+// Hooks
+import {useProperties, useAddProperty, useUpdateProperty, useDeleteProperty} from "../hooks/properties.hook";
+// Types
+import type { Property, CreateProperty, UpdateProperty} from "../types/properties.types";
+import type { Column } from "../components/common/table";
 
 const Properties = () => {
-  const sampleData = [
-    {
-      reference: "PROP-82669",
-      addressLine1: "51 Broughton Street",
-      sitemap: "/images/floor-plan-one.png",
-      postcode: "SW8 3QU",
-      organisation: "SEH Approach Ltd",
-      tags: "+",
-    },
-    {
-      reference: "PROP-82640",
-      addressLine1: "1 Holden Street",
-      sitemap: "/images/floor-plan-two.jpg",
-      postcode: "SW11 5UW",
-      organisation: "SEH Approach Ltd",
-      tags: "+",
-    },
-    {
-      reference: "PROP-78560",
-      addressLine1: "53 Victoria Street",
-      sitemap: "/images/floor-plan-three.jpg",
-      postcode: "ME12 1YB",
-      organisation: "SEH Approach Ltd",
-      tags: "+",
-    },
-    {
-      reference: "PROP-77791",
-      addressLine1: "3 Bellhurst Cottages",
-      sitemap: "/images/floor-plan-four.jpg",
-      postcode: "TN32 5DN",
-      organisation: "SEH Approach Ltd",
-      tags: "+",
-    },
-    {
-      reference: "PROP-77770",
-      addressLine1: "17 Orchard Close",
-      sitemap: "/images/floor-plan-five.jpg",
-      postcode: "TN34 2BZ",
-      organisation: "SEH Approach Ltd",
-      tags: "+",
-    },
-    {
-      reference: "PROP-77750",
-      addressLine1: "38 Firle Close",
-      sitemap: "/images/floor-plan-six.jpg",
-      postcode: "TN35 5ET",
-      organisation: "SEH Approach Ltd",
-      tags: "+",
-    },
-  ];
+  const { data: properties, isLoading, isError, error } = useProperties();
+  const { mutate: addProperty, status: addPropertyStatus } = useAddProperty();
+  const { mutate: updateProperty, status: updatePropertyStatus } = useUpdateProperty();
+  const { mutate: deleteProperty } = useDeleteProperty();
 
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [propertyIdForDesign, setPropertyIdForDesign] = useState("")
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isFloorPlanEditorOpen, setIsFloorPlanEditorOpen] = useState(false);
-  const [floorPlanImageUrL, setFloorPlanImageUrl] = useState("");
+  const [floorPlanImageUrL, setFloorPlanImageUrl] = useState<string>("");
+  const [initialDataForUpdate, setInitialDataForUpdate] = useState<UpdateProperty | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleFloorPlanEditor = (imageUrl: string) => {
+  const filteredProperties =
+    properties?.filter(
+      (property) =>
+        property.addressLine1?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        property.postcode.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
+
+  const handleAddProperty = (data: CreateProperty, resetFields: () => void) => {
+    addProperty(data, {
+      onSuccess: () => {
+        toast.success("Property added successfully!");
+        resetFields();
+        setIsAddModalOpen(false);
+      },
+    });
+  };
+
+  const handleUpdateProperty = (data: UpdateProperty) => {
+    updateProperty(data, {
+      onSuccess: () => {
+        toast.success("Property updated successfully!");
+        setIsUpdateModalOpen(false);
+      },
+    });
+  };
+
+  const handleDeleteProperty = (_id: string) => {
+    deleteProperty(_id, {
+      onSuccess: () => {
+        toast.success("Property deleted successfully!");
+      },
+    });
+  };
+
+  const handleFloorPlanEditor = (imageUrl: string, propertyId: string) => {
+    setPropertyIdForDesign(propertyId);
     setFloorPlanImageUrl(imageUrl);
     setIsFloorPlanEditorOpen(true);
   };
+
+  // Columns definition
+  const columns: Column<Property>[] = [
+      {
+      key: "propertyImage",
+      title: "Sitemap",
+      render: (row) => (
+         <button className="cursor-pointer"
+          onClick={() => {
+            handleFloorPlanEditor(row.propertyImage as string, row._id)
+          }}
+        >View</button>
+      ),
+    },
+    { key: "addressLine1", title: "Address Line 1" },
+    { key: "addressLine2", title: "Address Line 2" },
+    { key: "addressLine3", title: "Address Line 3" },
+    { key: "buildingName", title: "Building Name" },
+    { key: "buildingNumber", title: "Building Number" },
+    { key: "organisationName", title: "Organisation Name" },
+    { key: "departmentName", title: "Department Name" },
+    { key: "subBuilding", title: "Sub Building" },
+    { key: "premise", title: "Premise" },
+    { key: "town", title: "Town" },
+    { key: "district", title: "District" },
+    { key: "county", title: "County" },
+    { key: "traditionalCounty", title: "Traditional County" },
+    { key: "administrativeArea", title: "Administrative Area" },
+    { key: "ward", title: "Ward" },
+    { key: "postcode", title: "Postcode" },
+    { key: "postcodeInwards", title: "Postcode Inwards" },
+    { key: "postcodeOutwards", title: "Postcode Outwards" },
+    { key: "postcodeType", title: "Postcode Type" },
+    { key: "deliveryPointSuffix", title: "Delivery Point Suffix" },
+    { key: "dependantLocality", title: "Dependant Locality" },
+    { key: "doubleDependantLocality", title: "Double Dependant Locality" },
+    { key: "dependantThoroughfare", title: "Dependant Thoroughfare" },
+    { key: "thoroughfare", title: "Thoroughfare" },
+    { key: "poBox", title: "PO Box" },
+    { key: "udprn", title: "UDPRN" },
+    { key: "umprn", title: "UMPRN" },
+    { key: "isRural", title: "Is Rural" },
+    { key: "latitude", title: "Latitude" },
+    { key: "longitude", title: "Longitude" },
+    { key: "eastings", title: "Eastings" },
+    { key: "northings", title: "Northings" },
+    { key: "suOrganisationIndicator", title: "SU Organisation Indicator" },
+  ];
+
+  if (isLoading) return <Loading page={"properties"} />;
+
+  if (isError) return <Error error={error} page={"properties"} />;
 
   return (
     <>
       <TopBar
         title="Properties"
         definition="Create and manage your properties here"
+        action={
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="bg-primaryDark border-primaryDark text-white px-4 py-2 rounded cursor-pointer"
+          >
+            Add Property
+          </button>
+        }
+        search={
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search properties..."
+            className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primaryDark"
+          />
+        }
       />
+
       <main className="flex min-h-screen flex-col items-center justify-between p-6">
         <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
-          {/* Header Controls */}
-          <HeaderControls createBtnText="Create Property" />
-
-          {/* Table */}
-          <table className="min-w-full text-sm text-left border-collapse">
-            <TableHeader
-              column={[
-                "reference",
-                "addressLine1",
-                "sitemap",
-                "postcode",
-                "organisation",
-                "tags",
-              ]}
-            />
-
-            <tbody>
-              {sampleData.map((item, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className={`border-b border-gray-100 hover:bg-gray-50/30 ${
-                    rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50/10"
-                  }`}
-                >
-                  {/* Checkbox */}
-                  <td className="px-4 py-3">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
-                    />
-                  </td>
-
-                  {/* Action button */}
-                  <td className="px-4 py-3">
-                    <button className="flex items-center gap-1 text-textLight hover:text-gray-800 text-sm">
-                      Action
-                    </button>
-                  </td>
-
-                  {/* Reference */}
-                  <td className="px-4 py-3 text-gray-700 text-sm font-mono">
-                    {item.reference}
-                  </td>
-
-                  {/* Address */}
-                  <td className="px-4 py-3 text-gray-700 text-sm">
-                    {item.addressLine1}
-                  </td>
-
-                  {/* Sitemap */}
-                  <td className="px-4 py-3 text-gray-700 text-sm">
-                    <button
-                      className="cursor-pointer"
-                      onClick={() => {
-                        handleFloorPlanEditor(item.sitemap);
-                      }}
-                    >
-                      View
-                    </button>
-                  </td>
-
-                  {/* Postcode */}
-                  <td className="px-4 py-3 text-gray-700 text-sm">
-                    {item.postcode}
-                  </td>
-
-                  {/* Organisation */}
-                  <td className="px-4 py-3 text-gray-700 text-sm">
-                    {item.organisation}
-                  </td>
-
-                  {/* Tags */}
-                  <td className="px-4 py-3 text-gray-700 text-sm">
-                    {item.tags}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table<Property>
+            data={filteredProperties || []}
+            columns={columns}
+            actions={{
+              edit: (row) => {
+                setInitialDataForUpdate(row);
+                setIsUpdateModalOpen(true);
+              },
+              delete: (row) => {
+                handleDeleteProperty(row._id);
+              },
+            }}
+          />
         </div>
       </main>
 
-      {isFloorPlanEditorOpen && (
+      {/* Add Property Modal */}
+      <AddPropertyModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddProperty}
+        isLoading={addPropertyStatus === "pending"}
+      />
+
+      {/* Update Property Modal */}
+      <UpdatePropertyModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+        onSubmit={handleUpdateProperty}
+        isLoading={updatePropertyStatus === "pending"}
+        initialData={initialDataForUpdate}
+      />
+
+      {/* Property Image Editor Modal */}
+       {isFloorPlanEditorOpen && (
         <FloorPlanEditor
           imageUrl={floorPlanImageUrL}
           setIsFloorPlanEditorOpen={setIsFloorPlanEditorOpen}
+          propertyIdForDesign={propertyIdForDesign}
         />
       )}
     </>

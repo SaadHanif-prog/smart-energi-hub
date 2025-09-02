@@ -11,8 +11,6 @@ import {useAddPropertyDesignPattern} from "../../hooks/properties.hook"
 
 const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpen,}: FloorPlanEditorProps) => {
 
-  console.log("propertyIdForDesign", propertyIdForDesign)
-
   const { mutate: addPropertyDesign } = useAddPropertyDesignPattern();
   
 
