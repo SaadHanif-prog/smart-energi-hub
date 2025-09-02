@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Controllers
-const {createProperty, getAllProperties, updateProperty, deleteProperty, createPropertyDesignPattern} = require("../controllers/properties.controller");
+const {createProperty, getAllProperties, updateProperty, deleteProperty, createPropertyDesignPattern, getAllPropertyDesigns} = require("../controllers/properties.controller");
 
 // Validators
 const {validateCreateProperty, validateUpdateProperty} = require("../validators/properties.validator");
@@ -15,8 +15,9 @@ const multerImg = require("../middlewares/multer-img")
 
 router.get("/", getAllProperties);
 router.post("/create", multerImg.single("file"), validateCreateProperty, handleValidationErrors, createProperty);
-router.post("/create/property-design", createPropertyDesignPattern);
-router.patch( "/update/:id", multerImg.single("file"), validateUpdateProperty, handleValidationErrors, updateProperty);
+router.post("/design/create", createPropertyDesignPattern);
+router.get("/designs", getAllPropertyDesigns);
+router.patch("/update/:id", multerImg.single("file"), validateUpdateProperty, handleValidationErrors, updateProperty);
 router.delete("/delete/:id", deleteProperty);
 
 module.exports = router;

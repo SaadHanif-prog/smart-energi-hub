@@ -69,13 +69,13 @@ export const deleteProperty = async (_id: string): Promise<void> => {
 // Create property design pattern
 export const createPropertyDesignPattern = async (newPropertyDesign: CreatePropertyDesignPattern): Promise<PropertyDesignPattern> => {
   const { data } = await apiClient.post<PropertyDesignPattern>(
-    `${ENDPOINTS.property}/create/property-design`, newPropertyDesign);
+    `${ENDPOINTS.property}/design/create`, newPropertyDesign);
   return data;
 };
 
 // Get all property designs
 export const getPropertyDesigns = async (): Promise<PropertyDesignPattern[]> => {
-  const { data } = await apiClient.get<PropertyDesignApiResponse>(ENDPOINTS.property);
+  const { data } = await apiClient.get<PropertyDesignApiResponse>(`${ENDPOINTS.property}/designs`);
   return data.data;
 };
 

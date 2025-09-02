@@ -142,7 +142,6 @@ const deleteProperty = asyncHandler(async (req, res) => {
 
 const createPropertyDesignPattern = asyncHandler(async (req, res) => {
 
-  console.log("body in property design", req.body)
   const { propertyId, lines } = req.body;
 
   if (!propertyId) {
@@ -159,6 +158,11 @@ const createPropertyDesignPattern = asyncHandler(async (req, res) => {
     });
   }
 
+  const isDesignAlreadyAvailable = await PropertyDesignPatternModel.find({propertyId})
+    if(isDesignAlreadyAvailable) {
+      await PropertyDesignPatternModel.deleteMany({propertyId})
+    }
+
   const newDesignPattern = await PropertyDesignPatternModel.create({
     propertyId,
     lines,
@@ -172,12 +176,23 @@ const createPropertyDesignPattern = asyncHandler(async (req, res) => {
 });
 
 
+const getAllPropertyDesigns = asyncHandler(async (req, res) => {
+  const propertyDesigns = await PropertyDesignPatternModel.find();
+
+  return res.status(200).json({
+    success: true,
+    message: "Property Designs Fetched Successfully",
+    data: propertyDesigns,
+  });
+});
+
 
 module.exports = {
   createProperty,
   getAllProperties,
   updateProperty,
   deleteProperty,
+  getAllPropertyDesigns,
   createPropertyDesignPattern
 };
 

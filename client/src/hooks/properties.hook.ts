@@ -59,7 +59,6 @@ export const useDeleteProperty = () => {
   });
 };
 
-
 // Add New Property Design
 export const useAddPropertyDesignPattern = () => {
   const queryClient = useQueryClient();
@@ -73,7 +72,6 @@ export const useAddPropertyDesignPattern = () => {
     },
   });
 };
-
 
 // Fetch all property design pattern
 export const usePropertiesDesignPattern = (): UseQueryResult<PropertyDesignPattern[], AxiosError<ErrorResponse>> => {

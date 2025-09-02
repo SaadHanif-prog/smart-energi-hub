@@ -22,7 +22,7 @@ const Properties = () => {
   const { mutate: deleteProperty } = useDeleteProperty();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [propertyIdForDesign, setPropertyIdForDesign] = useState("")
+  const [propertyIdForDesign, setPropertyIdForDesign] = useState("");
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isFloorPlanEditorOpen, setIsFloorPlanEditorOpen] = useState(false);
   const [floorPlanImageUrL, setFloorPlanImageUrl] = useState<string>("");

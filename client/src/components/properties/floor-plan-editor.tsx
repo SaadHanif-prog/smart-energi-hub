@@ -4,15 +4,28 @@ import toast from "react-hot-toast";
 import useImage from "use-image";
 
 // Types
-import type {LineData, FloorPlanEditorProps } from "../../types/properties.types";
+import type {LineData, FloorPlanEditorProps, PropertyDesignPattern } from "../../types/properties.types";
 
 // Hooks
-import {useAddPropertyDesignPattern} from "../../hooks/properties.hook"
+import {useAddPropertyDesignPattern, usePropertiesDesignPattern} from "../../hooks/properties.hook"
 
 const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpen,}: FloorPlanEditorProps) => {
 
   const { mutate: addPropertyDesign } = useAddPropertyDesignPattern();
+  const { data: propertyDesigns} = usePropertiesDesignPattern();
   
+  const [initialPropertyDesign, setInitialPropertyDesign] =
+    useState<PropertyDesignPattern>({
+      _id: "",
+      propertyId: "",
+      lines: [],
+      createdAt: "",
+      updatedAt: "",
+    });
+
+    // console.log("Initial Property Design", initialPropertyDesign)
+    // console.log("Initial Property Design Id", propertyIdForDesign)
+
 
   const [image] = useImage(imageUrl, "anonymous");
   const [lines, setLines] = useState<LineData[]>([]);
@@ -46,6 +59,22 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
     window.addEventListener("resize", updateSize);
     return () => window.removeEventListener("resize", updateSize);
   }, [image]);
+
+  useEffect(()=>{
+   const intialDesign = propertyDesigns?.filter((prop)=>{
+      return prop.propertyId === propertyIdForDesign
+    })
+    
+    setInitialPropertyDesign(intialDesign && intialDesign[0] ? intialDesign[0] : initialPropertyDesign)
+  }, [propertyIdForDesign, propertyDesigns])
+
+  useEffect(() => {
+  if (initialPropertyDesign && initialPropertyDesign.lines.length > 0) {
+    setLines(initialPropertyDesign.lines);
+  } else {
+    setLines([]);
+  }
+}, [initialPropertyDesign]);
 
   const handleMouseDown = (e: any) => {
     isDrawing.current = true;
