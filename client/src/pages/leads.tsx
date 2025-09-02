@@ -12,9 +12,9 @@ import UpdateLeadModal from "../modals/leads/update-lead-modal";
 import { useLeads, useAddLead, useUpdateLead, useDeleteLead } from "../hooks/leads.hook";
 import { useProperties } from "../hooks/properties.hook";
 import { useContacts } from "../hooks/contact.hook";
-// Types
+// Types and constant data
 import type { CreateLead, UpdateLead, FlattenedLead } from "../types/leads.types";
-import type { Column } from "../components/common/table";
+import {columns} from "../types/leads.types"
 
 const LeadsPage = () => {
   const { data: leads, isLoading, isError, error } = useLeads();
@@ -84,19 +84,6 @@ const flattenedLeads: FlattenedLead[] = filteredLeads.map((lead) => ({
   contactPhone: lead.contact?.contact ?? undefined,
 }));
 
-// Columns definition
-const columns: Column<FlattenedLead>[] = [
-  { key: "reference", title: "Reference" },
-  { key: "industry", title: "Industry" },
-  { key: "source", title: "Source" },
-  { key: "addressLine1", title: "Property Address" },
-  { key: "town", title: "Town" },
-  { key: "country", title: "Country" },
-  { key: "firstname", title: "Contact First Name" },
-  { key: "surname", title: "Contact Surname" },
-  { key: "email", title: "Contact Email" },
-  { key: "contactPhone", title: "Contact Phone" },
-];
 
   if (isLoading) return <Loading page={"leads"} />;
   if (isError) return <Error error={error} page={"leads"} />;

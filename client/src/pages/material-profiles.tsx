@@ -10,9 +10,9 @@ import AddMaterialProfileModal from "../modals/material-profiles/add-materialpro
 import UpdateMaterialProfileModal from "../modals/material-profiles/update-materialprofile.model";
 // Hooks
 import {useMaterialProfiles, useAddMaterialProfile, useUpdateMaterialProfile, useDeleteMaterialProfile} from "../hooks/material-profiles.hook";
-// Types
+// Types and constant data 
 import type { MaterialProfile, CreateMaterialProfile, UpdateMaterialProfile } from "../types/material-profile.types";
-import type { Column } from "../components/common/table";
+import {columns} from "../types/material-profile.types"
 
 const MaterialProfilesPage = () => {
   const { data: profiles, isLoading, isError, error } = useMaterialProfiles();
@@ -60,18 +60,7 @@ const MaterialProfilesPage = () => {
     });
   };
 
-  // Columns definition
-  const columns: Column<MaterialProfile>[] = [
-    { key: "improvementType", title: "Improvement Type" },
-    { key: "type", title: "Type" },
-    { key: "manufacturer", title: "Manufacturer" },
-    { key: "model", title: "Model" },
-    { key: "modelQualifier", title: "Model Qualifier" },
-    { key: "pcdfId", title: "PCDF ID" },
-    { key: "subType", title: "Sub Type" },
-    { key: "combinationBoiler", title: "Combination Boiler" },
-    { key: "isdefault", title: "Default" },
-  ];
+
 
   if (isLoading) return <Loading page={"material-profiles"} />;
   if (isError) return <Error error={error} page={"material-profiles"} />;

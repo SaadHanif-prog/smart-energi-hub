@@ -1,3 +1,5 @@
+import type { Column } from "../components/common/table";
+
 export type MaterialProfile = {
   _id: string;
   improvementType?: string;
@@ -38,3 +40,19 @@ export type MaterialProfilesApiResponse = {
 };
 
 export type ErrorResponse = { message: string };
+
+
+// Fields to display in the table 
+
+  // Columns definition
+export const columns: Column<MaterialProfile>[] = [
+    { key: "improvementType", title: "Improvement Type" },
+    { key: "type", title: "Type" },
+    { key: "manufacturer", title: "Manufacturer" },
+    { key: "model", title: "Model" },
+    { key: "modelQualifier", title: "Model Qualifier" },
+    { key: "pcdfId", title: "PCDF ID" },
+    { key: "subType", title: "Sub Type" },
+    { key: "combinationBoiler", title: "Combination Boiler" },
+    { key: "isdefault", title: "Default" },
+  ];

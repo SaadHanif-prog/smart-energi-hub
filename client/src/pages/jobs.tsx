@@ -11,9 +11,9 @@ import UpdateJobModal from "../modals/jobs/update-job-modal";
 // Hooks
 import { useJobs, useAddJob, useUpdateJob, useDeleteJob } from "../hooks/jobs.hook";
 import { useLeads } from "../hooks/leads.hook";
-// Types
+// Types and constant data
 import type { CreateJob, UpdateJob, JobWithRelations, FlattenedJob } from "../types/jobs.types";
-import type { Column } from "../components/common/table";
+import {columns} from "../types/jobs.types"
 
 const JobsPage = () => {
   const { data: jobs, isLoading, isError, error } = useJobs();
@@ -63,7 +63,7 @@ const filteredJobs = jobs?.filter(job =>
 const jobsWithRelations: JobWithRelations[] = filteredJobs;
 
 const flattenedJobs: FlattenedJob[] = jobsWithRelations.map((job) => {
-  const lead = job.lead;
+const lead = job.lead;
 
   return {
     _id: job._id,
@@ -100,28 +100,6 @@ const flattenedJobs: FlattenedJob[] = jobsWithRelations.map((job) => {
   };
 });
 
-
-  const columns: Column<FlattenedJob>[] = [
-  { key: "jobType", title: "Job Type" },
-  { key: "jobSubType", title: "Job SubType" },
-  { key: "leadReference", title: "Lead Reference" },
-  { key: "leadIndustry", title: "Lead Industry" },
-  { key: "leadSource", title: "Lead Source" },
-  { key: "addressLine1", title: "Property Address" },
-  { key: "postcode", title: "Postcode" },
-  { key: "town", title: "Town" },
-  { key: "country", title: "Country" },
-  { key: "administrativeArea", title: "Administrative Area" },
-  { key: "buildingName", title: "Building Name" },
-  { key: "buildingNumber", title: "Building Number" },
-  { key: "county", title: "County" },
-  { key: "contactReference", title: "Contact Reference" },
-  { key: "title", title: "Contact Title" },
-  { key: "firstname", title: "Contact First Name" },
-  { key: "surname", title: "Contact Surname" },
-  { key: "email", title: "Contact Email" },
-  { key: "contactPhone", title: "Contact Phone" },
-];
 
   if (isLoading) return <Loading page="jobs" />;
   if (isError) return <Error error={error} page="jobs" />;

@@ -10,9 +10,9 @@ import AddProjectModal from "../modals/projects/add-project-modal";
 import UpdateProjectModal from "../modals/projects/update-project-modal";
 // Hooks
 import { useProjects, useAddProject, useUpdateProject, useDeleteProject } from "../hooks/projects.hook";
-// Types
+// Types and constant data
 import type { Project, CreateProject, UpdateProject } from "../types/projects.types";
-import type { Column } from "../components/common/table";
+import {columns} from "../types/projects.types"
 
 const ProjectsPage = () => {
   const { data: projects, isLoading, isError, error } = useProjects();
@@ -58,12 +58,6 @@ const ProjectsPage = () => {
     });
   };
 
-  // Columns definition
-  const columns: Column<Project>[] = [
-    { key: "reference", title: "Reference" },
-    { key: "name", title: "Project Name" },
-    { key: "organisation", title: "Organisation" },
-  ];
 
   if (isLoading) return <Loading page={"projects"} />;
   if (isError) return <Error error={error} page={"projects"}/>;

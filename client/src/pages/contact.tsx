@@ -10,9 +10,9 @@ import AddContactModal from "../modals/contacts/add-contact-modal";
 import UpdateContactModal from "../modals/contacts/update-contact-modal";
 // Hooks
 import { useContacts, useAddContact, useUpdateContact, useDeleteContact} from "../hooks/contact.hook";
-// Types
+// Types and constant data
 import type { Contact, CreateContact, UpdateContact} from "../types/contacts.types";
-import type { Column } from "../components/common/table";
+import {columns} from "../types/contacts.types"
 
 const ContactsPage = () => {
   const { data: contacts, isLoading, isError, error} = useContacts();
@@ -60,14 +60,6 @@ const ContactsPage = () => {
   };
 
   // Columns definition
-  const columns : Column<Contact>[] = [
-  { key: "reference", title: "Reference" },
-  { key: "title", title: "Title" },
-  { key: "firstname", title: "First Name" },
-  { key: "surname", title: "Last Name" },
-  { key: "contact", title: "Phone" },
-  { key: "email", title: "Email" },
-];
 
   if (isLoading) return <Loading page={"contacts"}/>
 

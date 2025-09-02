@@ -1,3 +1,5 @@
+import type { Column } from "../components/common/table";
+
 export type Contact = {
   _id: string;
   reference?: string;
@@ -29,3 +31,16 @@ export type ContactsApiResponse = {
 };
 
 export type ErrorResponse = { message: string };
+
+
+// Fields to display in the table 
+
+export const columns : Column<Contact>[] = [
+  { key: "reference", title: "Reference" },
+  { key: "title", title: "Title" },
+  { key: "firstname", title: "First Name" },
+  { key: "surname", title: "Last Name" },
+  { key: "contact", title: "Phone" },
+  { key: "email", title: "Email" },
+];
+

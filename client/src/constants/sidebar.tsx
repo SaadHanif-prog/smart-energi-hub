@@ -1,17 +1,5 @@
 // Icons
-import {
-  LayoutDashboard,
-  Contact2,
-  Home,
-  FolderKanban,
-  BadgeHelp,
-  Hammer,
-  Users2,
-  CalendarCheck2,
-  FileText,
-  FileBarChart2,
-  PencilLine,
-} from "lucide-react";
+import {LayoutDashboard, Contact2, Home, FolderKanban, BadgeHelp, Hammer, Users2, CalendarCheck2, FileText, FileBarChart2, PencilLine} from "lucide-react";
 
 type NavLinks = {
   title: string;

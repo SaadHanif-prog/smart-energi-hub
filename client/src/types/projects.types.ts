@@ -1,3 +1,5 @@
+import type { Column } from "../components/common/table";
+
 export type Project = {
   _id: string;
   reference?: string;
@@ -43,3 +45,11 @@ export type UpdateProjectModalProps = {
   isLoading: boolean;
   initialData?: UpdateProject;
 };
+
+
+// Fields to show in the table 
+export const columns: Column<Project>[] = [
+    { key: "reference", title: "Reference" },
+    { key: "name", title: "Project Name" },
+    { key: "organisation", title: "Organisation" },
+  ];
