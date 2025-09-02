@@ -5,6 +5,7 @@ import Table from "../components/common/table";
 import TopBar from "../components/common/topbar";
 import Loading from "../components/common/loading";
 import Error from "../components/common/error";
+import FloorPlanEditor from "../components/properties/floor-plan-editor";
 // Modals
 import AddPropertyModal from "../modals/properties/add.property-model";
 import UpdatePropertyModal from "../modals/properties/update-property-modal";
@@ -21,7 +22,10 @@ const TestProperties = () => {
   const { mutate: deleteProperty } = useDeleteProperty();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [propertyIdForDesign, setPropertyIdForDesign] = useState("")
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isFloorPlanEditorOpen, setIsFloorPlanEditorOpen] = useState(false);
+  const [floorPlanImageUrL, setFloorPlanImageUrl] = useState<string>("");
   const [initialDataForUpdate, setInitialDataForUpdate] = useState<UpdateProperty | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -59,8 +63,25 @@ const TestProperties = () => {
     });
   };
 
+  const handleFloorPlanEditor = (imageUrl: string, propertyId: string) => {
+    setPropertyIdForDesign(propertyId);
+    setFloorPlanImageUrl(imageUrl);
+    setIsFloorPlanEditorOpen(true);
+  };
+
   // Columns definition
   const columns: Column<Property>[] = [
+      {
+      key: "propertyImage",
+      title: "Sitemap",
+      render: (row) => (
+         <button className="cursor-pointer"
+          onClick={() => {
+            handleFloorPlanEditor(row.propertyImage as string, row._id)
+          }}
+        >View</button>
+      ),
+    },
     { key: "addressLine1", title: "Address Line 1" },
     { key: "addressLine2", title: "Address Line 2" },
     { key: "addressLine3", title: "Address Line 3" },
@@ -158,6 +179,15 @@ const TestProperties = () => {
         isLoading={updatePropertyStatus === "pending"}
         initialData={initialDataForUpdate}
       />
+
+      {/* Property Image Editor Modal */}
+       {isFloorPlanEditorOpen && (
+        <FloorPlanEditor
+          imageUrl={floorPlanImageUrL}
+          setIsFloorPlanEditorOpen={setIsFloorPlanEditorOpen}
+          propertyIdForDesign={propertyIdForDesign}
+        />
+      )}
     </>
   );
 };

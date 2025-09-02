@@ -34,17 +34,19 @@ export type Property = {
   udprn?: string;
   umprn?: string;
   ward?: string;
+  propertyImage?: string;
 
   createdAt: Date;
   updatedAt: Date;
 };
 
-export type CreateProperty = Omit<Property, "_id" | "createdAt" | "updatedAt">;
+export type CreateProperty = Omit<Property, "_id" | "createdAt" | "updatedAt"> & {propertyImage?: File| null | string | undefined};
 
 export type UpdateProperty = Partial<
   Omit<Property, "_id" | "createdAt" | "updatedAt">
 > & {
   _id: string;
+  propertyImage?: File | null | undefined | string;
 };
 
 export type DeleteProperty = {
@@ -93,3 +95,37 @@ export type UpdatePropertyModalProps = {
   initialData?: UpdateProperty;
 };
 
+
+// Property Design Pattern
+
+export type LineData = {
+  points: number[]; 
+  color: string;
+  width: number;
+  tool: "pen" | "eraser";
+};
+
+export type PropertyDesignPattern = {
+  _id: string;
+  propertyId: string; 
+  lines: LineData[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreatePropertyDesignPattern = {
+  propertyId: string; 
+  lines: LineData[];
+};
+
+export type PropertyDesignApiResponse = {
+  success: boolean;
+  message: string;
+  data: PropertyDesignPattern[];
+};
+
+export type FloorPlanEditorProps = {
+  imageUrl: string;
+  propertyIdForDesign : string;
+  setIsFloorPlanEditorOpen: React.Dispatch<React.SetStateAction<boolean>>
+}

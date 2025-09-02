@@ -1,4 +1,5 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-hot-toast";
 // Types
 import type { CreateProperty, AddPropertyModalProps, AddPropertyFieldType } from "../../types/properties.types";
 
@@ -7,19 +8,40 @@ import { propertyModalFormFields } from "../../constants/property";
 
   const AddPropertyModal = ({isOpen, onClose, onSubmit, isLoading}: AddPropertyModalProps) => {
     
-    const {register, handleSubmit, formState: { errors }, reset} = useForm<CreateProperty>();
+    const {register, handleSubmit, control, formState: { errors }, reset} = useForm<CreateProperty>();
 
     const formFields: AddPropertyFieldType[] = propertyModalFormFields as AddPropertyFieldType[];
 
+    const isFile = (value: unknown): value is File => value instanceof File;
+
     const onSubmitForm = (data: CreateProperty) => {
-      const filteredObj = Object.fromEntries(
-        Object.entries(data).filter(
-          ([_, value]) => value !== "" && value !== null
-        )
+      const file = data.propertyImage;
+
+      if (
+        file &&
+        isFile(file) &&
+        !["image/png", "image/jpg", "image/jpeg"].includes(file.type)
+      ) {
+        toast.error("Only PNG, JPG, or JPEG files are allowed");
+        return;
+      }
+
+      const filteredData: CreateProperty = Object.fromEntries(
+        Object.entries(data).filter(([_, value]) => value !== "" && value != null)
       ) as CreateProperty;
 
-      onSubmit(filteredObj, reset);
+      const dataToSend: CreateProperty & { file?: File } = {
+        ...filteredData,
+      };
+      if (isFile(file)) {
+        dataToSend.file = file;
+        delete dataToSend.propertyImage;
+      }
+
+      onSubmit(dataToSend, reset);
     };
+
+
 
     if (!isOpen) return null;
 
@@ -71,6 +93,30 @@ import { propertyModalFormFields } from "../../constants/property";
                 )}
               </div>
             ))}
+
+            <div>
+              <label className="block mb-1">
+                Property Image (optional)
+              </label>
+              <Controller
+                control={control}
+                name="propertyImage"
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    accept=".png,.jpg,.jpeg"
+                    onChange={(e) => {
+                      field.onChange(e.target.files?.[0] || null);
+                    }}
+                  />
+                )}
+              />
+              {errors.propertyImage && (
+                <p className="text-red-500">
+                  {errors.propertyImage.message}
+                </p>
+              )}
+            </div>
 
             <div className="flex justify-end gap-2 mt-4">
               <button

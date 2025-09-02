@@ -137,9 +137,55 @@ const PropertySchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    propertyImage: {
+      type: String,
+    },
+    imagePublicId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
+
 const PropertyModel = mongoose.model("Property", PropertySchema);
-module.exports = PropertyModel;
+
+
+const PropertyDesignPatternSchema = new mongoose.Schema(
+  {
+    propertyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Property",
+      required: true,
+    },
+    lines: [
+      {
+        points: {
+          type: [Number],
+          required: true,
+        },
+        color: {
+          type: String,
+          required: true,
+        },
+        width: {
+          type: Number,
+          required: true,
+        },
+        tool: {
+          type: String,
+          enum: ["pen", "eraser"],
+          required: true,
+        },
+        _id: false, 
+      },
+    ],
+  },
+  { timestamps: true } 
+);
+
+
+const PropertyDesignPatternModel = mongoose.model("PropertyDesignPattern", PropertyDesignPatternSchema);
+
+
+module.exports = {PropertyModel, PropertyDesignPatternModel};

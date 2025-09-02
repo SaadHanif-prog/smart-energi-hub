@@ -4,20 +4,10 @@ import { AxiosError } from "axios";
 
 // Types
 import type { UseQueryResult } from "@tanstack/react-query";
-import type {
-  Property,
-  CreateProperty,
-  UpdateProperty,
-  ErrorResponse,
-} from "../types/properties.types";
+import type {Property, CreateProperty, UpdateProperty, ErrorResponse, CreatePropertyDesignPattern, PropertyDesignPattern} from "../types/properties.types";
 
 // APIs
-import {
-  getProperties,
-  createProperty,
-  updateProperty,
-  deleteProperty,
-} from "../api/properties.api";
+import { getProperties, createProperty, updateProperty, deleteProperty, createPropertyDesignPattern, getPropertyDesigns} from "../api/properties.api";
 
 // Fetch all properties
 export const useProperties = (): UseQueryResult<Property[], AxiosError<ErrorResponse>> => {
@@ -66,5 +56,29 @@ export const useDeleteProperty = () => {
     onError: (error: AxiosError<ErrorResponse>) => {
       toast.error(error.response?.data?.message || error.message);
     },
+  });
+};
+
+
+// Add New Property Design
+export const useAddPropertyDesignPattern = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (newPropertyDesign: CreatePropertyDesignPattern) => createPropertyDesignPattern(newPropertyDesign),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["propertyDesign"] });
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(error.response?.data?.message || error.message);
+    },
+  });
+};
+
+
+// Fetch all property design pattern
+export const usePropertiesDesignPattern = (): UseQueryResult<PropertyDesignPattern[], AxiosError<ErrorResponse>> => {
+  return useQuery<PropertyDesignPattern[], AxiosError<ErrorResponse>>({
+    queryKey: ["propertyDesign"],
+    queryFn: getPropertyDesigns,
   });
 };

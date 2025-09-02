@@ -10,13 +10,7 @@ type AddMaterialProfileModalProps = {
 };
 
 const AddMaterialProfileModal = ({isOpen, onClose, onSubmit, isLoading}: AddMaterialProfileModalProps) => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-    reset,
-  } = useForm<CreateMaterialProfile>();
+  const {register, handleSubmit, control, formState: { errors }, reset} = useForm<CreateMaterialProfile>();
 
   if (!isOpen) return null;
 
@@ -67,15 +61,7 @@ const onSubmitForm = (data: CreateMaterialProfile) => {
           className="space-y-4"
           encType="multipart/form-data"
         >
-          {[
-            "improvementType",
-            "type",
-            "manufacturer",
-            "model",
-            "modelQualifier",
-            "pcdfId",
-            "subType",
-            "combinationBoiler",
+          {["improvementType", "type", "manufacturer", "model", "modelQualifier", "pcdfId", "subType", "combinationBoiler",
           ].map((field) => (
             <div key={field}>
               <input
