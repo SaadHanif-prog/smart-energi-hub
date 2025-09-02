@@ -15,12 +15,7 @@ type AddLeadModalProps = {
 
 const AddLeadModal = ({isOpen, onClose, onSubmit, isLoading, contacts, properties,
 }: AddLeadModalProps) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<CreateLead>();
+  const {register, handleSubmit, formState: { errors }, reset} = useForm<CreateLead>();
 
   const onSubmitForm = (data: CreateLead) => {
     const filteredObj = Object.fromEntries(

@@ -14,31 +14,30 @@ const AddMaterialProfileModal = ({isOpen, onClose, onSubmit, isLoading}: AddMate
 
   if (!isOpen) return null;
 
-const isFile = (value: unknown): value is File => value instanceof File;
+  const isFile = (value: unknown): value is File => value instanceof File;
 
-const onSubmitForm = (data: CreateMaterialProfile) => {
-  const file = data.manufacturerInformation;
+  const onSubmitForm = (data: CreateMaterialProfile) => {
+    const file = data.manufacturerInformation;
 
-  // Validate PDF file
-  if (file && isFile(file) && file.type !== "application/pdf") {
-    toast.error("Only PDF files are allowed");
-    return;
-  }
+    if (file && isFile(file) && file.type !== "application/pdf") {
+      toast.error("Only PDF files are allowed");
+      return;
+    }
 
-  const filteredData: CreateMaterialProfile = Object.fromEntries(
-    Object.entries(data).filter(([_, value]) => value !== "" && value != null)
-  ) as CreateMaterialProfile;
+    const filteredData: CreateMaterialProfile = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== "" && value != null)
+    ) as CreateMaterialProfile;
 
-  const dataToSend: CreateMaterialProfile & { file?: File } = {
-    ...filteredData,
+    const dataToSend: CreateMaterialProfile & { file?: File } = {
+      ...filteredData,
+    };
+    if (isFile(file)) {
+      dataToSend.file = file;
+      delete dataToSend.manufacturerInformation;
+    }
+
+    onSubmit(dataToSend, reset);
   };
-  if (isFile(file)) {
-    dataToSend.file = file;
-    delete dataToSend.manufacturerInformation;
-  }
-
-  onSubmit(dataToSend, reset);
-};
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -61,22 +60,98 @@ const onSubmitForm = (data: CreateMaterialProfile) => {
           className="space-y-4"
           encType="multipart/form-data"
         >
-          {["improvementType", "type", "manufacturer", "model", "modelQualifier", "pcdfId", "subType", "combinationBoiler",
-          ].map((field) => (
-            <div key={field}>
-              <input
-                {...register(field as keyof CreateMaterialProfile)}
-                placeholder={`${field.charAt(0).toUpperCase() + field.slice(1)} (optional)`}
-                className="border p-2 w-full"
-              />
-              {errors[field as keyof CreateMaterialProfile] && (
-                <p className="text-red-500">
-                  {errors[field as keyof CreateMaterialProfile]?.message}
-                </p>
-              )}
-            </div>
-          ))}
+          {/* Separate fields instead of map */}
+          <div>
+            <input
+              {...register("improvementType")}
+              placeholder="Improvement Type (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.improvementType && (
+              <p className="text-red-500">{errors.improvementType.message}</p>
+            )}
+          </div>
 
+          <div>
+            <input
+              {...register("type")}
+              placeholder="Type (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.type && (
+              <p className="text-red-500">{errors.type.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("manufacturer")}
+              placeholder="Manufacturer (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.manufacturer && (
+              <p className="text-red-500">{errors.manufacturer.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("model")}
+              placeholder="Model (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.model && (
+              <p className="text-red-500">{errors.model.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("modelQualifier")}
+              placeholder="Model Qualifier (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.modelQualifier && (
+              <p className="text-red-500">{errors.modelQualifier.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("pcdfId")}
+              placeholder="PCDF ID (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.pcdfId && (
+              <p className="text-red-500">{errors.pcdfId.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("subType")}
+              placeholder="Sub Type (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.subType && (
+              <p className="text-red-500">{errors.subType.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("combinationBoiler")}
+              placeholder="Combination Boiler (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.combinationBoiler && (
+              <p className="text-red-500">
+                {errors.combinationBoiler.message}
+              </p>
+            )}
+          </div>
+
+          {/* File Upload */}
           <div>
             <label className="block mb-1">
               Manufacturer Information PDF (optional)
@@ -95,7 +170,9 @@ const onSubmitForm = (data: CreateMaterialProfile) => {
               )}
             />
             {errors.manufacturerInformation && (
-              <p className="text-red-500">{errors.manufacturerInformation.message}</p>
+              <p className="text-red-500">
+                {errors.manufacturerInformation.message}
+              </p>
             )}
           </div>
 

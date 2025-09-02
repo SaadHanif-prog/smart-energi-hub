@@ -16,15 +16,9 @@ type UpdateLeadModalProps = {
 };
 
 const UpdateLeadModal = ({isOpen, onClose, onSubmit, isLoading, initialData, contacts, properties}: UpdateLeadModalProps) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<UpdateLead>({
+  const {register, handleSubmit, formState: { errors }, reset,} = useForm<UpdateLead>({
     defaultValues: initialData || {},
   });
-
 
   // Reset form whenever initialData changes
   useEffect(() => {

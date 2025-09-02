@@ -12,14 +12,14 @@ type UpdateMaterialProfileModalProps = {
 };
 
 const UpdateMaterialProfileModal = ({isOpen, onClose, onSubmit, isLoading, initialData}: UpdateMaterialProfileModalProps) => {
-  const {register, handleSubmit, control, formState: { errors }, reset,
-  } = useForm<UpdateMaterialProfile>({
+  const {register, handleSubmit, control, formState: { errors }, reset} = useForm<UpdateMaterialProfile>({
     defaultValues: initialData || {},
   });
 
   useEffect(() => {
     if (initialData) reset(initialData);
   }, [initialData, reset]);
+
   const isFile = (value: unknown): value is File => value instanceof File;
 
   const onSubmitForm = (data: UpdateMaterialProfile) => {
@@ -45,7 +45,6 @@ const UpdateMaterialProfileModal = ({isOpen, onClose, onSubmit, isLoading, initi
     onSubmit(dataToSend);
   };
 
-
   if (!isOpen) return null;
 
   return (
@@ -62,37 +61,107 @@ const UpdateMaterialProfileModal = ({isOpen, onClose, onSubmit, isLoading, initi
           ✕
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Update Material Profile</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Update Material Profile
+        </h2>
 
         <form
           onSubmit={handleSubmit(onSubmitForm)}
           className="space-y-4"
           encType="multipart/form-data"
         >
-          {[
-            "improvementType",
-            "type",
-            "manufacturer",
-            "model",
-            "modelQualifier",
-            "pcdfId",
-            "subType",
-            "combinationBoiler",
-          ].map((field) => (
-            <div key={field}>
-              <input
-                {...register(field as keyof UpdateMaterialProfile)}
-                placeholder={`${field.charAt(0).toUpperCase() + field.slice(1)} (optional)`}
-                className="border p-2 w-full"
-              />
-              {errors[field as keyof UpdateMaterialProfile] && (
-                <p className="text-red-500">
-                  {errors[field as keyof UpdateMaterialProfile]?.message}
-                </p>
-              )}
-            </div>
-          ))}
+          {/* Separate fields instead of map */}
+          <div>
+            <input
+              {...register("improvementType")}
+              placeholder="Improvement Type (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.improvementType && (
+              <p className="text-red-500">{errors.improvementType.message}</p>
+            )}
+          </div>
 
+          <div>
+            <input
+              {...register("type")}
+              placeholder="Type (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.type && (
+              <p className="text-red-500">{errors.type.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("manufacturer")}
+              placeholder="Manufacturer (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.manufacturer && (
+              <p className="text-red-500">{errors.manufacturer.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("model")}
+              placeholder="Model (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.model && (
+              <p className="text-red-500">{errors.model.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("modelQualifier")}
+              placeholder="Model Qualifier (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.modelQualifier && (
+              <p className="text-red-500">{errors.modelQualifier.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("pcdfId")}
+              placeholder="PCDF ID (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.pcdfId && (
+              <p className="text-red-500">{errors.pcdfId.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("subType")}
+              placeholder="Sub Type (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.subType && (
+              <p className="text-red-500">{errors.subType.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              {...register("combinationBoiler")}
+              placeholder="Combination Boiler (optional)"
+              className="border p-2 w-full"
+            />
+            {errors.combinationBoiler && (
+              <p className="text-red-500">
+                {errors.combinationBoiler.message}
+              </p>
+            )}
+          </div>
+
+          {/* File Upload */}
           <div>
             <label className="block mb-1">
               Manufacturer Information PDF (optional)
@@ -126,7 +195,9 @@ const UpdateMaterialProfileModal = ({isOpen, onClose, onSubmit, isLoading, initi
                 </p>
               )}
             {errors.manufacturerInformation && (
-              <p className="text-red-500">{errors.manufacturerInformation.message}</p>
+              <p className="text-red-500">
+                {errors.manufacturerInformation.message}
+              </p>
             )}
           </div>
 

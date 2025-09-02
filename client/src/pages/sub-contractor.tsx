@@ -11,7 +11,7 @@ import UpdateSubContractorModal from "../modals/sub-contractor/update-subcontrac
 // Hooks
 import {
   useSubContractors, useAddSubContractor, useUpdateSubContractor, useDeleteSubContractor} from "../hooks/sub-contractor.hook";
-// Types
+// Types and constant data
 import type { SubContractor, CreateSubContractor, UpdateSubContractor} from "../types/sub-contractor.types";
 import type { Column } from "../components/common/table";
 

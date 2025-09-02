@@ -66,3 +66,38 @@ export type SubContractorsApiResponse = {
 export type ErrorResponse = {
   message: string;
 };
+
+
+// Modal Types
+
+export type AddSubContractorFieldType = {
+  name: keyof CreateSubContractor;
+  placeholder?: string;
+  required?: string | false;
+  type: "text" | "number" | "checkbox";
+  label?: string;
+};
+
+export type UpdateSubContractorFieldType = {
+  name: keyof UpdateSubContractor; 
+  placeholder?: string;
+  required?: string | false;
+  type: "text" | "number" | "checkbox";
+  label?: string; 
+};
+
+export type AddSubContractorModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: CreateSubContractor, resetFields: () => void) => void;
+  isLoading: boolean;
+};
+
+export type UpdateSubContractorModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: UpdateSubContractor) => void;
+  isLoading: boolean;
+  initialData?: UpdateSubContractor;
+};
+
