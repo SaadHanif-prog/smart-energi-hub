@@ -4,28 +4,17 @@ import toast from "react-hot-toast";
 import useImage from "use-image";
 
 // Types
-import type {LineData, FloorPlanEditorProps, PropertyDesignPattern } from "../../types/properties.types";
+import type {LineData, FloorPlanEditorProps} from "../../types/properties.types";
 
 // Hooks
-import {useAddPropertyDesignPattern, usePropertiesDesignPattern} from "../../hooks/properties.hook"
+import { useAddPropertyDesignPattern, usePropertiesDesignPattern} from "../../hooks/properties.hook";
 
-const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpen,}: FloorPlanEditorProps) => {
+// Components
+import DrawingLoader from "./drawing-loader";
 
+const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpen}: FloorPlanEditorProps) => {
   const { mutate: addPropertyDesign } = useAddPropertyDesignPattern();
-  const { data: propertyDesigns} = usePropertiesDesignPattern();
-  
-  const [initialPropertyDesign, setInitialPropertyDesign] =
-    useState<PropertyDesignPattern>({
-      _id: "",
-      propertyId: "",
-      lines: [],
-      createdAt: "",
-      updatedAt: "",
-    });
-
-    // console.log("Initial Property Design", initialPropertyDesign)
-    // console.log("Initial Property Design Id", propertyIdForDesign)
-
+  const { data: propertyDesigns, isLoading } = usePropertiesDesignPattern();
 
   const [image] = useImage(imageUrl, "anonymous");
   const [lines, setLines] = useState<LineData[]>([]);
@@ -36,13 +25,14 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
   const stageRef = useRef<any>(null);
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
 
+  // Resize handler
   useEffect(() => {
     const updateSize = () => {
+      if (!image) return;
       const maxWidth = window.innerWidth * 0.95;
       const maxHeight = window.innerHeight * 0.9;
 
-      const aspectRatio =
-        image?.width && image?.height ? image.width / image.height : 4 / 3;
+      const aspectRatio = image.width / image.height;
 
       let width = maxWidth;
       let height = width / aspectRatio;
@@ -60,117 +50,98 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
     return () => window.removeEventListener("resize", updateSize);
   }, [image]);
 
-  useEffect(()=>{
-   const intialDesign = propertyDesigns?.filter((prop)=>{
-      return prop.propertyId === propertyIdForDesign
-    })
-    
-    setInitialPropertyDesign(intialDesign && intialDesign[0] ? intialDesign[0] : initialPropertyDesign)
-  }, [propertyIdForDesign, propertyDesigns])
-
+  // Load initial design
   useEffect(() => {
-  if (initialPropertyDesign && initialPropertyDesign.lines.length > 0) {
-    setLines(initialPropertyDesign.lines);
-  } else {
-    setLines([]);
-  }
-}, [initialPropertyDesign]);
+    const intialDesign = propertyDesigns?.find(
+      (prop) => prop.propertyId === propertyIdForDesign
+    );
+    if (intialDesign && intialDesign.lines.length > 0) {
+      setLines(intialDesign.lines);
+    } else {
+      setLines([]);
+    }
+  }, [propertyIdForDesign, propertyDesigns]);
 
+  // Drawing handlers
   const handleMouseDown = (e: any) => {
+    if (!image) return;
     isDrawing.current = true;
-    const pos = e.target.getStage().getPointerPosition();
-    setLines([...lines, { points: [pos.x, pos.y], color, width, tool }]);
+    const stage = e.target.getStage();
+    const pos = stage.getPointerPosition();
+
+    const scaleX = image.width / stageSize.width;
+    const scaleY = image.height / stageSize.height;
+
+    setLines([
+      ...lines,
+      {
+        points: [pos.x * scaleX, pos.y * scaleY],
+        color,
+        width,
+        tool,
+      },
+    ]);
   };
 
   const handleMouseMove = (e: any) => {
-    if (!isDrawing.current) return;
+    if (!isDrawing.current || !image) return;
     const stage = e.target.getStage();
     const point = stage.getPointerPosition();
+
+    const scaleX = image.width / stageSize.width;
+    const scaleY = image.height / stageSize.height;
+
     const lastLine = lines[lines.length - 1];
-    lastLine.points = lastLine.points.concat([point.x, point.y]);
-    setLines(lines.slice(0, -1).concat(lastLine));
+    lastLine.points = lastLine.points.concat([
+      point.x * scaleX,
+      point.y * scaleY,
+    ]);
+    setLines([...lines.slice(0, -1), lastLine]);
   };
 
   const handleMouseUp = () => {
     isDrawing.current = false;
   };
 
-  const handleUndo = () => {
-    setLines(lines.slice(0, -1));
+  const handleUndo = () => setLines(lines.slice(0, -1));
+  const handleClear = () => setLines([]);
+
+  const handleSaveDrawing = async () => {
+    addPropertyDesign(
+      { propertyId: propertyIdForDesign, lines },
+      {
+        onSuccess: () => {
+          toast.success("Drawing Saved!");
+        },
+      }
+    );
   };
 
-  const handleClear = () => {
-    setLines([]);
-  };
 
- const handleSaveDrawing = async () => {
-  console.log("propertyId", propertyIdForDesign)
-  addPropertyDesign({propertyId: propertyIdForDesign, lines} , {
-      onSuccess: () => {
-        toast.success("Drawing Saved!");
-      },
-    });
-};
-
+  if (isLoading) return <DrawingLoader/>;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(0,0,0,0.8)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-        flexDirection: "column",
-        padding: "20px",
-      }}
-    >
+    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-black/80 p-5">
       {/* Toolbar */}
-      <div
-        style={{
-          display: "flex",
-          gap: "12px",
-          marginBottom: "12px",
-          background: "#222",
-          padding: "10px 16px",
-          borderRadius: "8px",
-          alignItems: "center",
-          color: "#fff",
-        }}
-      >
+      <div className="mb-3 flex items-center gap-3 rounded-lg bg-neutral-900 px-4 py-2 text-white">
         <button
           onClick={() => setTool("pen")}
-          style={{
-            background: tool === "pen" ? "#555" : "#333",
-            color: "#fff",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className={`rounded px-3 py-1 ${
+            tool === "pen" ? "bg-neutral-600" : "bg-neutral-800"
+          }`}
         >
           Pen
         </button>
         <button
           onClick={() => setTool("eraser")}
-          style={{
-            background: tool === "eraser" ? "#555" : "#333",
-            color: "#fff",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className={`rounded px-3 py-1 ${
+            tool === "eraser" ? "bg-neutral-600" : "bg-neutral-800"
+          }`}
         >
           Eraser
         </button>
 
-        <label style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <label className="flex items-center gap-2">
           Color:
           <input
             type="color"
@@ -180,7 +151,7 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
           />
         </label>
 
-        <label style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <label className="flex items-center gap-2">
           Brush:
           <input
             type="range"
@@ -193,56 +164,28 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
 
         <button
           onClick={handleUndo}
-          style={{
-            background: "#333",
-            color: "#fff",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="rounded bg-neutral-800 px-3 py-1"
         >
           Undo
         </button>
 
         <button
           onClick={handleClear}
-          style={{
-            background: "#999",
-            color: "#fff",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="rounded bg-neutral-500 px-3 py-1"
         >
           Clear
         </button>
 
         <button
           onClick={handleSaveDrawing}
-          style={{
-            background: "#0a84ff",
-            color: "#fff",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="rounded bg-blue-600 px-3 py-1"
         >
           Save Drawing
         </button>
 
         <button
           onClick={() => setIsFloorPlanEditorOpen(false)}
-          style={{
-            background: "#ff3b30",
-            color: "#fff",
-            padding: "6px 12px",
-            borderRadius: "4px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="rounded bg-red-600 px-3 py-1"
         >
           Close
         </button>
@@ -260,12 +203,9 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
           onTouchMove={handleMouseMove}
           onTouchEnd={handleMouseUp}
           ref={stageRef}
-          style={{
-            cursor: tool === "pen" ? "crosshair" : "cell",
-            background: "#fff",
-            borderRadius: "8px",
-            boxShadow: "0 0 20px rgba(0,0,0,0.5)",
-          }}
+          className={`rounded-lg bg-white shadow-xl ${
+            tool === "pen" ? "cursor-crosshair" : "cursor-cell"
+          }`}
         >
           <Layer>
             <KonvaImage
@@ -275,20 +215,29 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
             />
           </Layer>
           <Layer>
-            {lines.map((line, i) => (
-              <Line
-                key={i}
-                points={line.points}
-                stroke={line.color}
-                strokeWidth={line.width}
-                tension={0.5}
-                lineCap="round"
-                lineJoin="round"
-                globalCompositeOperation={
-                  line.tool === "eraser" ? "destination-out" : "source-over"
-                }
-              />
-            ))}
+            {lines.map((line, i) => {
+              if (!image) return null;
+              const scaleX = stageSize.width / image.width;
+              const scaleY = stageSize.height / image.height;
+              const scaledPoints = line.points.map((p, idx) =>
+                idx % 2 === 0 ? p * scaleX : p * scaleY
+              );
+
+              return (
+                <Line
+                  key={i}
+                  points={scaledPoints}
+                  stroke={line.color}
+                  strokeWidth={line.width}
+                  tension={0.5}
+                  lineCap="round"
+                  lineJoin="round"
+                  globalCompositeOperation={
+                    line.tool === "eraser" ? "destination-out" : "source-over"
+                  }
+                />
+              );
+            })}
           </Layer>
         </Stage>
       )}
@@ -297,3 +246,4 @@ const FloorPlanEditor = ({imageUrl, propertyIdForDesign, setIsFloorPlanEditorOpe
 };
 
 export default FloorPlanEditor;
+
