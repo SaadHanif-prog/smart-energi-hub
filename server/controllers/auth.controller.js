@@ -1,66 +1,127 @@
-// server.js
-import express from "express";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("../utils/async-handler");
+const UserModel = require("../models/user.model");
 
-const app = express();
-app.use(express.json());
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
-const PORT = 3000;
-const SECRET_KEY = "your_secret_key";
+// Helpers
+const generateAccessToken = (user) => {
+  return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
+};
 
-const users = [];
+const generateRefreshToken = (user) => {
+  return jwt.sign(user, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+};
 
-// Register endpoint
-app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+// Common cookie options
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "none",
+};
 
-  // check if user exists
-  const existingUser = users.find((u) => u.username === username);
-  if (existingUser)
-    return res.status(400).json({ message: "User already exists" });
+// Register
+const register = asyncHandler(async (req, res) => {
+  const { username, email, password } = req.body;
 
-  // hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
-  users.push({ username, password: has });
-  res.json({ message: "User registered successfully" });
-});
+  const existingUser = await UserModel.findOne({ email });
+  if (existingUser) {
+    const error = new Error("User already exists.");
+    error.status = 400;
+    throw error;
+  }
 
-// Login endpoint
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const newUser = await UserModel.create({ username, email, password });
 
-  const user = users.find((u) => u.username === username);
-  if (!user) return res.status(400).json({ message: "Invalid credentials" });
+  const accessToken = generateAccessToken({ id: newUser.id, email: newUser.email });
+  const refreshToken = generateRefreshToken({ id: newUser.id, email: newUser.email });
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("accessToken", accessToken, cookieOptions);
 
-  // Generate JWT
-  const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
-  res.json({ token });
-});
-
-// Middleware to protect routes
-function authenticate(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-
-  if (!token) return res.status(401).json({ message: "Access denied" });
-
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
-    req.user = user;
-    next();
+  return res.status(201).json({
+    success: true,
+    message: "User registered successfully.",
+    data: { id: newUser.id, username: newUser.username, email: newUser.email },
   });
-}
-
-// Protected route
-app.get("/profile", authenticate, (req, res) => {
-  res.json({ message: `Welcome ${req.user.username}!`, user: req.user });
 });
 
-// Start server
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+
+// Login
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    const error = new Error("Invalid credentials.");
+    error.status = 400;
+    throw error;
+  }
+
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    const error = new Error("Invalid credentials.");
+    error.status = 400;
+    throw error;
+  }
+
+  const accessToken = generateAccessToken({ id: user.id, email: user.email });
+  const refreshToken = generateRefreshToken({ id: user.id, email: user.email });
+
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("accessToken", accessToken, cookieOptions);
+
+  return res.status(200).json({
+    success: true,
+    message: "Login successful.",
+    data: { id: user.id, username: user.username, email: user.email },
+  });
+});
+
+// Refresh Token
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    const error = new Error("Refresh token is required.");
+    error.status = 403;
+    throw error;
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
+
+    const accessToken = generateAccessToken({ id: decoded.id, email: decoded.email });
+
+    res.cookie("accessToken", accessToken, cookieOptions);
+
+    return res.status(200).json({
+      success: true,
+      message: "Access token refreshed successfully.",
+      data: { id: decoded.id, email: decoded.email },
+    });
+  } catch (err) {
+    const error = new Error("Invalid or expired refresh token.");
+    error.status = 403;
+    throw error;
+  }
+});
+
+// Logout
+const logout = asyncHandler(async (req, res) => {
+
+  res.clearCookie("refreshToken", cookieOptions);
+  res.clearCookie("accessToken", cookieOptions);
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully.",
+  });
+});
+
+module.exports = {
+  register,
+  login,
+  refreshAccessToken,
+  logout,
+};
