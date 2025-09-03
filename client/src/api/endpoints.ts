@@ -6,7 +6,7 @@ type EndpointsType = {
   job: "/api/v1/jobs";
   "sub-contractor" : "/api/v1/sub-contractor"
   "material-profiles" : "/api/v1/material-profiles"
-
+   auth : "/api/v1/auth"
 };
 
 const ENDPOINTS: EndpointsType = {
@@ -16,8 +16,8 @@ const ENDPOINTS: EndpointsType = {
   property: "/api/v1/properties",
   job: "/api/v1/jobs",
   "sub-contractor" : "/api/v1/sub-contractor",
-  "material-profiles" : "/api/v1/material-profiles"
-
+  "material-profiles" : "/api/v1/material-profiles",
+  auth : "/api/v1/auth"
 };
 
 export default ENDPOINTS;

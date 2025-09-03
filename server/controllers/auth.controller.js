@@ -82,7 +82,7 @@ const login = asyncHandler(async (req, res) => {
 // Refresh Token
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) {
+  if (!refreshToken) {jwt
     const error = new Error("Refresh token is required.");
     error.status = 403;
     throw error;

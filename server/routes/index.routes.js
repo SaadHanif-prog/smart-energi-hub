@@ -10,9 +10,12 @@ const jobRouter = require("./jobs.route");
 const subContractorRouter = require("./sub-contractor.route");
 const authRouter = require("./auth.route")
 
+const authMiddleware = require("../middlewares/auth.middleware")
+
 // Routes
 router.use("/auth", authRouter);
 
+router.use(authMiddleware)
 router.use("/contacts", contactRouter);
 router.use("/material-profiles", materialProfileRouter);
 router.use("/properties", propertiesRouter);
