@@ -7,7 +7,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   const token = req.cookies.accessToken;
 
   if (!token) {
-    const error = new Error("Access token missing. Please log in.");
+    const error = new Error("Access token missing.");
     error.status = 401;
     throw error;
   }

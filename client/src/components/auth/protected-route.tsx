@@ -1,27 +1,16 @@
-import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { useSelector } from 'react-redux'
+// Types 
+import type { RootState } from "../../states/store";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
-const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const authState = localStorage.getItem("isAuthenticated");
-    setIsAuthenticated(authState === "true");
-  }, []);
-
-  return { isAuthenticated };
-};
-
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated } = useAuth();
+   const isAuthenticated = useSelector((state: RootState) => state.auth.isLoggedIn)
 
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
-  }
+   console.log("Auth state", isAuthenticated)
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

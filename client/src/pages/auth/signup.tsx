@@ -1,22 +1,25 @@
 import { useState } from "react";
-import { useLogin } from "../../hooks/auth.hook";
+import { useSignup } from "../../hooks/auth.hook";
 import toast from "react-hot-toast";
 
+export default function SignupPage() {
+  const { mutate: signup, status: signupStatus } = useSignup();
 
-export default function LoginPage() {
-  const {mutate : login, status : loginStatus} = useLogin()
-
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
 
-  const handleLogin = () => {
-      login({email, password}, {
-      onSuccess: () => {
-        toast.success("Login Successful");
-      },
-    });
-  }
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    signup(
+      { username, email, password },
+      {
+        onSuccess: () => {
+          toast.success("Signup Successful");
+        },
+      }
+    );
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -37,16 +40,33 @@ export default function LoginPage() {
               alt="Smart Energi Hub"
               className="h-16 mx-auto mb-4"
             />
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">
-              Welcome Back
-            </h1>
+
             <p className="text-gray-600">
-              Sign in to your Smart Energi Hub account
+              Sign up to your Smart Energi Hub account
             </p>
           </div>
 
           {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleSignup} className="space-y-6">
+            {/* Username Field */}
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="w-full px-4 py-3 border border-sky-200 rounded-lg focus:ring-2 focus:ring-sky-400 focus:border-transparent transition-all duration-200 bg-sky-50/30 backdrop-blur-sm"
+                placeholder="Enter your username"
+              />
+            </div>
+
             {/* Email Field */}
             <div>
               <label
@@ -105,32 +125,19 @@ export default function LoginPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loginStatus === "pending"}
+              disabled={signupStatus === "pending"}
               className="w-full bg-gradient-to-r from-sky-500 to-cyan-500 text-white py-3 px-4 rounded-lg font-medium hover:from-sky-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loginStatus === "pending" ? (
+              {signupStatus === "pending" ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Logging in...
+                  Signing up...
                 </div>
               ) : (
-                "Log in"
+                "Sign up"
               )}
             </button>
           </form>
-
-          {/* Footer */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
-              <a
-                href="#"
-                className="text-sky-600 hover:text-sky-700 font-medium transition-colors"
-              >
-                Sign up here
-              </a>
-            </p>
-          </div>
         </div>
       </div>
     </div>

@@ -17,9 +17,10 @@ const generateRefreshToken = (user) => {
 // Common cookie options
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "none",
+  secure: process.env.NODE_ENV === "production", 
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 };
+
 
 // Register
 const register = asyncHandler(async (req, res) => {
@@ -101,6 +102,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       data: { id: decoded.id, email: decoded.email },
     });
   } catch (err) {
+    res.clearCookie("refreshToken", cookieOptions);
+    res.clearCookie("accessToken", cookieOptions);
     const error = new Error("Invalid or expired refresh token.");
     error.status = 403;
     throw error;
