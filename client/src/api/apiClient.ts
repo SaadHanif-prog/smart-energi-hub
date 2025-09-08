@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "/api/v1",
+  baseURL: "https://smart-energi-hub-5lwv.vercel.app/api/v1",
   withCredentials: true, 
 });
 
 export const apiClientWithoutAuth = axios.create({
-  baseURL: "/api/v1",
+  baseURL: "https://smart-energi-hub-5lwv.vercel.app/api/v1",
 })
 
 // Response interceptor
