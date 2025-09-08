@@ -12,7 +12,7 @@ import Appointments from "../pages/appointments";
 import MaterialProfile from "../pages/material-profiles";
 import DataMatch from "../pages/datamatch";
 import SignatureRequests from "../pages/signature-requests";
-import ProtectedRoute from "../components/auth/protected-route";
+// import ProtectedRoute from "../components/auth/protected-route";
 import Properties from "../pages/properties";
 
 
@@ -29,9 +29,9 @@ const Router = () => {
     {
       path: "/",
       element: (
-        <ProtectedRoute>
+        // <ProtectedRoute>
           <Layout />
-        </ProtectedRoute>
+        // </ProtectedRoute>
       ),
       children: [
         { path: "", element: <Dashboard /> },
