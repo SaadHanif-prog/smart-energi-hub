@@ -15,7 +15,7 @@ const authMiddleware = require("../middlewares/auth.middleware")
 // Routes
 router.use("/auth", authRouter);
 
-router.use(authMiddleware)
+// router.use(authMiddleware)
 router.use("/contacts", contactRouter);
 router.use("/material-profiles", materialProfileRouter);
 router.use("/properties", propertiesRouter);
