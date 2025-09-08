@@ -11,7 +11,7 @@ import type {RootState} from "../states/store"
 import { signup, login} from "../api/auth.api";
 
 // Actions from redux store
-import { signup as signupAction, login as loginAction } from "../states/slices/authSlice";
+import { signup as signupAction} from "../states/slices/authSlice";
 
 export const useSignup = () => {
   const dispatch = useDispatch<RootState>();
